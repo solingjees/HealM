@@ -31,7 +31,7 @@ import mixin from './mixin'
 
 export default {
   name: 'SideMenu',
-  mixins: [ mixin ],
+  mixins: [mixin],
   components: {
     SideMenuItem,
     CollapsedMenu
