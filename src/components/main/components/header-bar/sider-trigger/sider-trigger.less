@@ -1,21 +1,11 @@
-.trans{
-  transition: transform .2s ease;
-}
-@size: 40px;
+@import '~/src/index.less';
+
+@size:30px;
 .sider-trigger-a{
-  padding: 6px;
-  width: @size;
-  height: @size;
-  display: inline-block;
-  text-align: center;
-  color: #5c6b77;
-  margin-top: 12px;
-  i{
-    .trans;
-    vertical-align: top;
-  }
-  &.collapsed i{
-    transform: rotateZ(90deg);
-    .trans;
+  height: 100%;
+  .flex(row,center,center);
+  img{
+    width: @size;
+    height: @size;
   }
 }

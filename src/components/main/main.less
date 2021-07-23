@@ -1,26 +1,25 @@
+@import '~/src/index.less';
 .main{
-  .logo-con{
-    height: 64px;
-    padding: 10px;
-    img{
-      height: 44px;
-      width: auto;
-      display: block;
-      margin: 0 auto;
-    }
-  }
+  height: 100%;
   .header-con{
     background: #fff;
     padding: 0 20px;
     width: 100%;
+    height: 50px;
+    position: fixed;
+    top: 0px;
+    left: 0px;
+    z-index: 1000;
+    box-shadow: @boxShadow;
   }
   .main-layout-con{
-    height: 100%;
-    overflow: hidden;
+    // height: 100vh;
+    // overflow: scroll;
   }
   .main-content-con{
-    height: ~"calc(100% - 60px)";
-    overflow: hidden;
+    // height: ~"calc(100% - 50px)";
+    // height: 100vh;
+    // overflow: scroll;
   }
   .tag-nav-wrapper{
     padding: 0;
@@ -28,15 +27,61 @@
     background:#F0F0F0;
   }
   .content-wrapper{
-    padding: 18px;
-    height: ~"calc(100% - 80px)";
-    overflow: auto;
+    // height: 100%;
+    // overflow: scroll;
   }
   .left-sider{
+    position: fixed;
+    top: 0px;
+    left: 0px;
+    bottom:0px;
+    z-index: 999;
+    height: auto;
     .ivu-layout-sider-children{
       overflow-y: scroll;
       margin-right: -18px;
     }
+
+    .user-info {
+      width: 256px;
+      .flex(column,center,center);
+      .login-button {
+        width: 200px;
+        height: 40px;
+        line-height: 40px;
+        box-sizing: border-box;
+        margin: 0px;
+        margin-top: 20px;
+        font-size: 18px;
+        border-radius: 10px;
+        background: @themeColor;
+      }
+      .user-info-content{
+        width: 256px;
+        margin: 10px 0px;
+        .flex(column, center, center);
+        .avatar-wrapper{
+           width: 100px;
+           height: 100px;
+           overflow: hidden;
+           border-radius: 50px;
+           border: none;
+
+           .flex(column, center, center);
+            img {
+              width: 100%;
+            }
+        }
+        .user-info-word-group{
+           margin-top: 5px;
+           .gender-img{
+             width: 20px;
+           }
+        }
+      }
+
+    }
+
   }
 }
 .ivu-menu-item > i{
@@ -73,3 +118,6 @@
 .ivu-select-dropdown.ivu-dropdown-transfer{
   max-height: 400px;
 }
+
+
+

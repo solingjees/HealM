@@ -1,78 +1,106 @@
 import axios from 'axios'
 import store from '@/store'
-// import { Spin } from 'iview'
-const addErrorLog = errorInfo => {
-  const { statusText, status, request: { responseURL } } = errorInfo
-  const info = {
-    type: 'ajax',
-    code: status,
-    mes: statusText,
-    url: responseURL
-  }
-  if (!responseURL.includes('save_error_logger')) store.dispatch('addErrorLog', info)
-}
+import publicConfig from '@/config'
+import errorHandle from './errorHandle'
+import { getToken } from './util'
+const CancelToken = axios.CancelToken
 
 class HttpRequest {
-  constructor (baseUrl = baseURL) {
+  constructor (baseUrl) {
     this.baseUrl = baseUrl
-    this.queue = {}
+    this.pending = {}
   }
 
+  // default config
   getInsideConfig () {
     const config = {
       baseURL: this.baseUrl,
       headers: {
-        //
-      }
+        'Content-Type': 'application/json;charset=utf-8'
+      },
+      timeout: 5000
     }
     return config
   }
 
-  destroy (url) {
-    delete this.queue[url]
-    if (!Object.keys(this.queue).length) {
-      // Spin.hide()
+  /**
+   *
+   * @param {string} key 要删除的key的名字
+   * @param {*} isRequest 是否是发出请求的拦截器
+   */
+  removePending (key, isRequest = false) {
+    if (this.pending[key] && isRequest) {
+      this.pending[key]('取消重复请求')
     }
+    delete this.pending[key]
   }
 
-  interceptors (instance, url) {
-    // 请求拦截
-    instance.interceptors.request.use(config => {
-      // 添加全局的loading...
-      if (!Object.keys(this.queue).length) {
-        // Spin.show() // 不建议开启，因为界面不友好
-      }
-      this.queue[url] = true
-      return config
-    }, error => {
-      return Promise.reject(error)
-    })
-    // 响应拦截
-    instance.interceptors.response.use(res => {
-      this.destroy(url)
-      const { data, status } = res
-      return { data, status }
-    }, error => {
-      this.destroy(url)
-      let errorInfo = error.response
-      if (!errorInfo) {
-        const { request: { statusText, status }, config } = JSON.parse(JSON.stringify(error))
-        errorInfo = {
-          statusText,
-          status,
-          request: { responseURL: config.url }
+  // 设定拦截器
+  interceptors (instance) {
+    instance.interceptors.request.use(
+      config => {
+        let isPublic = false
+        publicConfig.publicPath.map(path => {
+          isPublic = isPublic || path.test(config.url)
+        })
+        const token = getToken()
+        if (!isPublic && token) {
+          config.headers.Authorization = token
         }
+        const key = config.url + '&' + config.method
+        this.removePending(key, true)
+        config.cancelToken = new CancelToken(c => {
+          this.pending[key] = c
+        })
+        return config
+      },
+      err => {
+        errorHandle(err)
+        return Promise.reject(err)
       }
-      addErrorLog(errorInfo)
-      return Promise.reject(error)
-    })
+    )
+
+    instance.interceptors.response.use(
+      res => {
+        const key = res.config.url + '&' + res.config.method
+        this.removePending(key)
+        if (res.status === 200) {
+          return Promise.resolve(res.data)
+        } else {
+          return Promise.reject(res)
+        }
+      },
+      err => {
+        errorHandle(err)
+        return Promise.reject(err)
+      }
+    )
   }
 
+  // 创建实例
   request (options) {
     const instance = axios.create()
-    options = Object.assign(this.getInsideConfig(), options)
-    this.interceptors(instance, options.url)
-    return instance(options)
+    const newOptions = Object.assign(this.getInsideConfig(), options)
+    this.interceptors(instance)
+    return instance(newOptions)
+  }
+
+  get (url, config) {
+    const options = Object.assign({
+      method: 'get',
+      url
+    }, config)
+
+    return this.request(options)
+  }
+
+  post (url, data) {
+    return this.request({
+      url,
+      method: 'post',
+      data
+    })
   }
 }
+
 export default HttpRequest

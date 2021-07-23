@@ -1,33 +1,87 @@
 <template>
-  <Layout style="height: 100%" class="main">
-    <Sider hide-trigger collapsible :width="256" :collapsed-width="64" v-model="collapsed" class="left-sider" :style="{overflow: 'hidden'}">
-      <side-menu accordion ref="sideMenu" :active-name="$route.name" :collapsed="collapsed" @on-select="turnToPage" :menu-list="menuList">
+  <Layout class="main">
+    <Sider
+      v-model="collapsed"
+      hide-trigger
+      collapsible
+      :width="256"
+      :collapsed-width="0"
+      class="left-sider"
+      :style="{ overflow: 'hidden' }"
+    >
+      <side-menu
+        ref="sideMenu"
+        accordion
+        :active-name="$route.name"
+        :collapsed="collapsed"
+        :has-get-info="hasGetInfo"
+        :menu-list="menuList"
+        @on-select="turnToPage"
+        @on-logout="logout"
+        @on-close="closeSider"
+      >
+        <Blank />
         <!-- 需要放在菜单上面的内容，如Logo，写在side-menu标签内部，如下 -->
-        <div class="logo-con">
-          <img v-show="!collapsed" :src="maxLogo" key="max-logo" />
-          <img v-show="collapsed" :src="minLogo" key="min-logo" />
+        <div class="user-info">
+          <div v-if="hasGetInfo">
+            <div
+              class="user-info-content"
+              @click="goToUserCenter"
+            >
+              <!-- 宽和高都至少100px-->
+              <div class="avatar-wrapper">
+                <img
+                  :src="avatar"
+                  alt="用户头像"
+                >
+              </div>
+              <div class="user-info-word-group">
+                {{ username }}
+                <img
+                  class="gender-img"
+                  :src="
+                    usergender === 1
+                      ? require('/src/assets/images/iconfont/man.png')
+                      : require('/src/assets/images/iconfont/woman.png')
+                  "
+                  alt="性别"
+                >
+              </div>
+            </div>
+          </div>
+          <div v-else>
+            <md-button
+              class="md-raised md-primary login-button"
+              @click="navigateToLogin"
+            >
+              登录 / 注册
+            </md-button>
+          </div>
         </div>
       </side-menu>
     </Sider>
+    <my-mask
+      v-if="!collapsed"
+      @click="clickMask"
+    />
     <Layout>
       <Header class="header-con">
-        <header-bar :collapsed="collapsed" @on-coll-change="handleCollapsedChange">
-          <user :message-unread-count="unreadCount" :user-avatar="userAvatar"/>
-          <language v-if="$config.useI18n" @on-lang-change="setLocal" style="margin-right: 10px;" :lang="local"/>
-          <error-store v-if="$config.plugin['error-store'] && $config.plugin['error-store'].showInHeader" :has-read="hasReadErrorPage" :count="errorCount"></error-store>
-          <fullscreen v-model="isFullscreen" style="margin-right: 10px;"/>
-        </header-bar>
+        <header-bar
+          :collapsed="collapsed"
+          @on-coll-change="handleCollapsedChange"
+        />
       </Header>
-      <Content class="main-content-con">
+      <Content
+        class="main-content-con"
+        :style="{
+          height: 100 * vh + 'px',
+        }"
+      >
         <Layout class="main-layout-con">
-          <div class="tag-nav-wrapper">
-            <tags-nav :value="$route" @input="handleClick" :list="tagNavList" @on-close="handleCloseTag"/>
-          </div>
+          <Blank />
           <Content class="content-wrapper">
-            <keep-alive :include="cacheList">
-              <router-view/>
-            </keep-alive>
-            <ABackTop :height="100" :bottom="80" :right="50" container=".content-wrapper"></ABackTop>
+            <router-view />
+            <copyright v-if="routeName !== 'about'" />
           </Content>
         </Layout>
       </Content>
@@ -35,6 +89,8 @@
   </Layout>
 </template>
 <script>
+import Mask from '_c/mask'
+import Blank from '_c/blank'
 import SideMenu from './components/side-menu'
 import HeaderBar from './components/header-bar'
 import TagsNav from './components/tags-nav'
@@ -43,11 +99,9 @@ import ABackTop from './components/a-back-top'
 import Fullscreen from './components/fullscreen'
 import Language from './components/language'
 import ErrorStore from './components/error-store'
+import Copyright from './components/copyright'
 import { mapMutations, mapActions, mapGetters } from 'vuex'
-import { getNewTagList, routeEqual } from '@/libs/util'
-import routers from '@/router/routers'
-import minLogo from '@/assets/images/logo-min.jpg'
-import maxLogo from '@/assets/images/logo.jpg'
+import { routeEqual } from '@/libs/util'
 import './main.less'
 export default {
   name: 'Main',
@@ -59,20 +113,41 @@ export default {
     Fullscreen,
     ErrorStore,
     User,
-    ABackTop
+    ABackTop,
+    Blank,
+    Copyright,
+    'my-mask': Mask
   },
   data () {
     return {
-      collapsed: false,
-      minLogo,
-      maxLogo,
-      isFullscreen: false
+      collapsed: true,
+      isFullscreen: false,
+      vh: window.innerHeight * 0.01
     }
   },
+  mounted () {
+    window.addEventListener('resize', () => {
+      this.vh = window.innerHeight * 0.01
+    })
+  },
   computed: {
-    ...mapGetters([
-      'errorCount'
-    ]),
+    routeName () {
+      return this.$route.name
+    },
+    hasGetInfo () {
+      return this.$store.state.user.hasGetInfo
+    },
+    avatar () {
+      return this.$store.state.user.avatar
+    },
+    username () {
+      return this.$store.state.user.name
+    },
+    usergender () {
+      return this.$store.state.user.gender
+    },
+
+    ...mapGetters(['errorCount']),
     tagNavList () {
       return this.$store.state.app.tagNavList
     },
@@ -83,7 +158,14 @@ export default {
       return this.$store.state.user.avatarImgPath
     },
     cacheList () {
-      const list = ['ParentView', ...this.tagNavList.length ? this.tagNavList.filter(item => !(item.meta && item.meta.notCache)).map(item => item.name) : []]
+      const list = [
+        'ParentView',
+        ...(this.tagNavList.length
+          ? this.tagNavList
+            .filter(item => !(item.meta && item.meta.notCache))
+            .map(item => item.name)
+          : [])
+      ]
       return list
     },
     menuList () {
@@ -108,10 +190,12 @@ export default {
       'setHomeRoute',
       'closeTag'
     ]),
-    ...mapActions([
-      'handleLogin',
-      'getUnreadMessageCount'
-    ]),
+    ...mapActions(['handleLogin', 'getUnreadMessageCount', 'handleLogout']),
+    // 在mask上点击
+    clickMask () {
+      console.log('click mask')
+      this.collapsed = true
+    },
     turnToPage (route) {
       let { name, params, query } = {}
       if (typeof route === 'string') name = route
@@ -147,41 +231,32 @@ export default {
     },
     handleClick (item) {
       this.turnToPage(item)
-    }
-  },
-  watch: {
-    '$route' (newRoute) {
-      const { name, query, params, meta } = newRoute
-      this.addTag({
-        route: { name, query, params, meta },
-        type: 'push'
-      })
-      this.setBreadCrumb(newRoute)
-      this.setTagNavList(getNewTagList(this.tagNavList, newRoute))
-      this.$refs.sideMenu.updateOpenName(newRoute.name)
-    }
-  },
-  mounted () {
-    /**
-     * @description 初始化设置面包屑导航和标签导航
-     */
-    this.setTagNavList()
-    this.setHomeRoute(routers)
-    const { name, params, query, meta } = this.$route
-    this.addTag({
-      route: { name, params, query, meta }
-    })
-    this.setBreadCrumb(this.$route)
-    // 设置初始语言
-    this.setLocal(this.$i18n.locale)
-    // 如果当前打开页面不在标签栏中，跳到homeName页
-    if (!this.tagNavList.find(item => item.name === this.$route.name)) {
+    },
+    navigateToLogin () {
       this.$router.push({
-        name: this.$config.homeName
+        name: 'login'
       })
+    },
+    async logout () {
+      const res = await this.handleLogout()
+      if (res) {
+        this.$router.replace({
+          name: 'login'
+        })
+      } else {
+        this.$Message.error('退出失败')
+      }
+    },
+    // 前往个人中心
+    goToUserCenter () {
+      this.closeSider()
+      this.$router.push({
+        name: 'userCenter'
+      })
+    },
+    closeSider () {
+      this.collapsed = true
     }
-    // 获取未读消息条数
-    this.getUnreadMessageCount()
   }
 }
 </script>

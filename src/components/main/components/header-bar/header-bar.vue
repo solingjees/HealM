@@ -1,33 +1,52 @@
 <template>
   <div class="header-bar">
-    <sider-trigger :collapsed="collapsed" icon="md-menu" @on-change="handleCollpasedChange"></sider-trigger>
-    <custom-bread-crumb show-icon style="margin-left: 30px;" :list="breadCrumbList"></custom-bread-crumb>
-    <div class="custom-content-con">
-      <slot></slot>
+    <div class="left">
+      <sider-trigger
+        :collapsed="collapsed"
+        icon="md-menu"
+        @on-change="handleCollpasedChange"
+      />
+      <div class="title">
+        {{ title }}
+      </div>
+    </div>
+    <div class="right-icon">
+      <img
+        :src="LogoIcon"
+        alt="logo"
+        @click="goToAbout"
+      >
     </div>
   </div>
 </template>
 <script>
 import siderTrigger from './sider-trigger'
-import customBreadCrumb from './custom-bread-crumb'
+import LogoIcon from '_images/logo.png'
 import './header-bar.less'
 export default {
   name: 'HeaderBar',
   components: {
-    siderTrigger,
-    customBreadCrumb
+    siderTrigger
   },
   props: {
     collapsed: Boolean
   },
+  data: () => ({
+    LogoIcon
+  }),
   computed: {
-    breadCrumbList () {
-      return this.$store.state.app.breadCrumbList
+    title () {
+      return this.$route.meta.title || ''
     }
   },
   methods: {
     handleCollpasedChange (state) {
       this.$emit('on-coll-change', state)
+    },
+    goToAbout () {
+      this.$router.push({
+        name: 'about'
+      })
     }
   }
 }

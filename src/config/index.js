@@ -1,8 +1,9 @@
+import HealthItemConfig from './healthItem'
 export default {
   /**
    * @description 配置显示在浏览器标签的title
    */
-  title: 'iView-admin',
+  title: 'HealM',
   /**
    * @description token在Cookie中存储的天数，默认1天
    */
@@ -12,12 +13,12 @@ export default {
    *              如果不使用，则需要在路由中给需要在菜单中展示的路由设置meta: {title: 'xxx'}
    *              用来在菜单中显示文字
    */
-  useI18n: true,
+  useI18n: false,
   /**
    * @description api请求基础路径
    */
   baseUrl: {
-    dev: 'https://www.easy-mock.com/mock/5add9213ce4d0e69998a6f51/iview-admin/',
+    dev: 'http://localhost:3000',
     pro: 'https://produce.com'
   },
   /**
@@ -32,5 +33,19 @@ export default {
       showInHeader: true, // 设为false后不会在顶部显示错误日志徽标
       developmentOff: true // 设为true后在开发环境不会收集错误信息，方便开发中排查错误
     }
-  }
+  },
+  /**
+   * @description 不需要鉴权的请求
+  */
+  publicPath: [/^\/public/, /^\/login/],
+  /**
+   *  @description 请求的头部
+   */
+  requestHeader: '/api',
+  /**
+   *  @description  不需要用户信息的路由
+   */
+  openRouters: ['login', 'phoneLogin', 'forgetPassword'],
+  uploadImageUrl: '/api/home/uploadFile',
+  healthItemConfig: HealthItemConfig
 }

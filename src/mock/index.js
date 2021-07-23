@@ -1,7 +1,7 @@
 import Mock from 'mockjs'
-import { login, logout, getUserInfo } from './login'
-import { getTableData, getDragList, uploadImage, getOrgData, getTreeSelectData } from './data'
-import { getMessageInit, getContentByMsgId, hasRead, removeReaded, restoreTrash, messageCount } from './user'
+import { normalLogin, sendPhoneVerify, checkPhoneVerify } from './login'
+import { getInfo, resetPassword, uploadFile, updateInfo, getHealthData, getHealthDetailData, getHealthStatisticsData } from './home'
+import { addHealthDetailData, updateHealthDetailData, deleteHealthDetailData } from './user'
 
 // 配置Ajax请求延时，可用来测试网络延迟大时项目中一些效果
 Mock.setup({
@@ -9,20 +9,42 @@ Mock.setup({
 })
 
 // 登录相关和获取用户信息
-Mock.mock(/\/login/, login)
-Mock.mock(/\/get_info/, getUserInfo)
-Mock.mock(/\/logout/, logout)
-Mock.mock(/\/get_table_data/, getTableData)
-Mock.mock(/\/get_drag_list/, getDragList)
-Mock.mock(/\/save_error_logger/, 'success')
-Mock.mock(/\/image\/upload/, uploadImage)
-Mock.mock(/\/message\/init/, getMessageInit)
-Mock.mock(/\/message\/content/, getContentByMsgId)
-Mock.mock(/\/message\/has_read/, hasRead)
-Mock.mock(/\/message\/remove_readed/, removeReaded)
-Mock.mock(/\/message\/restore/, restoreTrash)
-Mock.mock(/\/message\/count/, messageCount)
-Mock.mock(/\/get_org_data/, getOrgData)
-Mock.mock(/\/get_tree_select_data/, getTreeSelectData)
+Mock.mock(/\/login\/normalLogin/, normalLogin)
+
+// 公共角色
+Mock.mock(/\/home\/getInfo/, getInfo)
+
+// 获取手机验证码
+Mock.mock(/\/login\/sendPhoneVerify/, sendPhoneVerify)
+
+// 手机号验证码校验
+Mock.mock(/\/login\/checkPhoneVerify/, checkPhoneVerify)
+
+// 更新密码
+Mock.mock(/\/home\/resetPassword/, resetPassword)
+
+// 上传图片
+Mock.mock(/\/home\/uploadFile/, uploadFile)
+
+// 更新用户信息
+Mock.mock(/\/home\/updateInfo/, updateInfo)
+
+// 获取用户健康数据
+Mock.mock(/\/home\/getHealthData/, getHealthData)
+
+// 获取用户详细健康数据
+Mock.mock(/\/home\/getHealthDetailData/, getHealthDetailData)
+
+// 更新用户数据
+Mock.mock(/\/user\/addHealthDetailData/, addHealthDetailData)
+
+// 编辑用户健康记录
+Mock.mock(/\/user\/updateHealthDetailData/, updateHealthDetailData)
+
+// 删除用户健康记录
+Mock.mock(/\/user\/deleteHealthDetailData/, deleteHealthDetailData)
+
+// 获取用户健康统计
+Mock.mock(/\/home\/getHealthStatisticsData/, getHealthStatisticsData)
 
 export default Mock

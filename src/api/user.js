@@ -1,84 +1,12 @@
-import axios from '@/libs/api.request'
+import axios from '@/libs/request'
 
-export const login = ({ userName, password }) => {
-  const data = {
-    userName,
-    password
-  }
-  return axios.request({
-    url: 'login',
-    data,
-    method: 'post'
-  })
-}
+const HEADER = '/user'
 
-export const getUserInfo = (token) => {
-  return axios.request({
-    url: 'get_info',
-    params: {
-      token
-    },
-    method: 'get'
-  })
-}
+// 添加健康数据项
+export const addHealthDetailData = (data) => axios.post(HEADER + '/addHealthDetailData', data)
 
-export const logout = (token) => {
-  return axios.request({
-    url: 'logout',
-    method: 'post'
-  })
-}
+// 更新健康数据项
+export const updateHealthDetailData = (data) => axios.post(HEADER + '/updateHealthDetailData', data)
 
-export const getUnreadCount = () => {
-  return axios.request({
-    url: 'message/count',
-    method: 'get'
-  })
-}
-
-export const getMessage = () => {
-  return axios.request({
-    url: 'message/init',
-    method: 'get'
-  })
-}
-
-export const getContentByMsgId = msg_id => {
-  return axios.request({
-    url: 'message/content',
-    method: 'get',
-    params: {
-      msg_id
-    }
-  })
-}
-
-export const hasRead = msg_id => {
-  return axios.request({
-    url: 'message/has_read',
-    method: 'post',
-    data: {
-      msg_id
-    }
-  })
-}
-
-export const removeReaded = msg_id => {
-  return axios.request({
-    url: 'message/remove_readed',
-    method: 'post',
-    data: {
-      msg_id
-    }
-  })
-}
-
-export const restoreTrash = msg_id => {
-  return axios.request({
-    url: 'message/restore',
-    method: 'post',
-    data: {
-      msg_id
-    }
-  })
-}
+// 删除健康数据项
+export const deleteHealthDetailData = (data) => axios.post(HEADER + '/deleteHealthDetailData', data)

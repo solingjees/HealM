@@ -1,9 +1,19 @@
 <template>
-  <a @click="handleChange" type="text" :class="['sider-trigger-a', collapsed ? 'collapsed' : '']"><Icon :type="icon" :size="size" /></a>
+  <a
+    type="text"
+    class="sider-trigger-a"
+    @click="handleChange"
+  >
+    <img
+      :src="menuFillIcon"
+      alt="菜单图标"
+      size="12"
+    ></a>
 </template>
 <script>
+import menuFillIcon from '_icon/menu-fill.png'
 export default {
-  name: 'siderTrigger',
+  name: 'SiderTrigger',
   props: {
     collapsed: Boolean,
     icon: {
@@ -13,6 +23,11 @@ export default {
     size: {
       type: Number,
       default: 26
+    }
+  },
+  data () {
+    return {
+      menuFillIcon
     }
   },
   methods: {

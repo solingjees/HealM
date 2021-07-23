@@ -1,40 +1,33 @@
+@import '~/src/index.less';
 .side-menu-wrapper{
   user-select: none;
-  .menu-collapsed{
-    padding-top: 10px;
+  .side-menu{
+    .menu-item-wrapper {
+      .flex(row, flex-start, center);
 
-    .ivu-dropdown{
-      width: 100%;
-      .ivu-dropdown-rel a{
-        width: 100%;
+      .menu-item-img {
+        width: 35px;
+        height: 35px;
+      }
+
+      .menu-item-title {
+        font-size: 18px;
+        margin-left: 15px;
+        text-decoration: none !important;
       }
     }
-    .ivu-tooltip{
-      width: 100%;
-      .ivu-tooltip-rel{
+      .menu-item {
+        text-decoration: none !important;
+      }
+      .logout-container{
+        position:fixed;
+        bottom: 20px;
+        left: 0px;
         width: 100%;
+        box-sizing: border-box;
+        margin: 0px;
+        padding-left: 23px;
+        color: rgba(255,255,255,.7);
       }
-      .ivu-tooltip-popper .ivu-tooltip-content{
-        .ivu-tooltip-arrow{
-          border-right-color: #fff;
-        }
-        .ivu-tooltip-inner{
-          background: #fff;
-          color: #495060;
-        }
-      }
-    }
-
-
   }
-  a.drop-menu-a{
-    display: inline-block;
-    padding: 6px 15px;
-    width: 100%;
-    text-align: center;
-    color: #495060;
-  }
-}
-.menu-title{
-  padding-left: 6px;
 }

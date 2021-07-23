@@ -1,0 +1,166 @@
+<template>
+  <div class="health-detail-wrapper">
+    <health-detail-header
+      :health-item="healthDetailData.itemData"
+      :health-item-id="healthItemId"
+      :user-id="userId"
+      @on-add="add"
+    />
+    <router-view
+      :user-id="userId"
+      :health-item-id="healthItemId"
+      :health-item="healthDetailData.itemData"
+      :date="date"
+      :health-detail-data="healthDetailData"
+      @on-change-date="changeDate"
+      @on-change-health-record="changeHealthRecord"
+      @on-delete-health-record="deleteHealthRecord"
+    />
+    <Modal
+      v-if="healthDetailData && healthDetailData.itemData"
+      v-model="showModal"
+      :title="'添加' + healthDetailData.itemData.name || ''"
+      :loading="true"
+      @on-ok="submit"
+    >
+      <input-item
+        title="时间"
+        type="time"
+        @on-change-value="(value) => changeValue('date', value)"
+      />
+      <input-item
+        v-for="(item, index) in healthDetailData.itemData.newRecordName"
+        :key="'input-item-' + index"
+        :title="item"
+        :type="inputType"
+        @on-change-value="(value) => changeValue('data', value, index)"
+      >
+        <div
+          v-if="
+            healthDetailData.itemData.unit &&
+              healthDetailData.itemData.unit !== '无'
+          "
+          class="append"
+        >
+          {{ healthDetailData.itemData.unit }}
+        </div>
+      </input-item>
+    </Modal>
+  </div>
+</template>
+
+<script>
+import HealthDetailHeader from './components/header'
+import InputItem from '@/components/inputItem'
+import { addHealthDetailData } from '@/api/user'
+import { getHealthDetailData } from '@/api/home'
+import moment from 'moment'
+export default {
+  name: 'HealthDetail',
+  components: {
+    HealthDetailHeader,
+    InputItem
+  },
+  props: {
+    healthItemId: {
+      type: [String, Number],
+      default: ''
+    },
+    userId: {
+      type: [String, Number],
+      default: ''
+    }
+  },
+  data: () => ({
+    showModal: false,
+    addDataTemplate: {
+      date: '',
+      data: []
+    },
+    healthDetailData: {},
+    date: ''
+  }),
+  computed: {
+    inputType () {
+      //  dataType:1, //0表示float，1代表datetime，2表示picture
+      switch (this.dataType) {
+        case 0:
+          return 'line'
+        case 1:
+          return 'time'
+        case 2:
+          return 'image'
+      }
+    },
+    dataType () {
+      return this.healthDetailData.itemData ? parseInt(this.healthDetailData.itemData.dataType) : 0
+    }
+  },
+  async mounted () {
+    this.date = moment().format('YYYY-MM-DD')
+    await this._getHealthDetailData(this.date)
+    this.addDataTemplate.data = new Array(
+      this.healthDetailData.itemData.newRecordName.length
+    )
+  },
+  methods: {
+    async submit () {
+      const res = await addHealthDetailData(this.addDataTemplate)
+      if (res.status) {
+        this.showModal = false
+      }
+      if (this.date === moment(this.addDataTemplate.date).format('YYYY-MM-DD')) {
+        await this._getHealthDetailData(this.addDataTemplate.date)
+      } else {
+        this.date = moment(this.addDataTemplate.date).format('YYYY-MM-DD')
+      }
+    },
+    add () {
+      this.showModal = true
+    },
+    changeValue (key, value, index) {
+      if (!(this.addDataTemplate[key] instanceof Array)) {
+        this.addDataTemplate[key] = value
+      } else {
+        this.addDataTemplate[key][index] = value
+      }
+    },
+    async _getHealthDetailData (date) {
+      const res = await getHealthDetailData({
+        healthItemIds: [this.healthItemId],
+        date,
+        userId: this.userId
+      })
+      if (res.status) {
+        this.healthDetailData = res.data[0].detailData
+      }
+    },
+    changeDate (date) {
+      this.date = date
+      this._getHealthDetailData(date)
+    },
+    changeHealthRecord (data) {
+      const index = data.index
+      delete data.index
+      const newRecordData = JSON.parse(JSON.stringify(this.healthDetailData.recordData))
+      newRecordData[index] = data
+      this.healthDetailData.recordData = newRecordData
+    },
+    deleteHealthRecord (index) {
+      const newRecordData = JSON.parse(JSON.stringify(this.healthDetailData.recordData))
+      newRecordData.splice(index, 1)
+      this.healthDetailData.recordData = newRecordData
+    }
+  }
+}
+</script>
+
+<style lang="less" scoped>
+@import '~/src/index.less';
+.health-detail-wrapper {
+  width: 100%;
+}
+.append {
+  margin: 0px 10px;
+}
+</style>

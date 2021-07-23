@@ -1,216 +1,176 @@
-import {
-  login,
-  logout,
-  getUserInfo,
-  getMessage,
-  getContentByMsgId,
-  hasRead,
-  removeReaded,
-  restoreTrash,
-  getUnreadCount
-} from '@/api/user'
+import { getInfo, resetPassword, updateInfo } from '@/api/home'
+import { normalLogin } from '@/api/login'
 import { setToken, getToken } from '@/libs/util'
+import { UserInfoStorage } from '@/libs/localStorage'
 
 export default {
   state: {
-    userName: '',
-    userId: '',
-    avatarImgPath: '',
-    token: getToken(),
-    access: '',
     hasGetInfo: false,
-    unreadCount: 0,
-    messageUnreadList: [],
-    messageReadedList: [],
-    messageTrashList: [],
-    messageContentStore: {}
+    token: getToken(),
+    id: '',
+    identity: -1, // 0表示用户，1表示医生,-1表示未登录的用户
+    phoneNumber: '',
+    qqNumber: '',
+    name: '',
+    avatar: '',
+    gender: '',
+    birthday: '', // 1970-1-10
+    age: '',
+    // 医生专属
+    hospital: '', // 医院
+    department: '', // 科室
+    position: '', // 职位
+    skill: '', // 擅长
+    introduction: '' // 介绍
   },
   mutations: {
-    setAvatar (state, avatarPath) {
-      state.avatarImgPath = avatarPath
+    setHasGetInfo (state, hasGetInfo) {
+      state.hasGetInfo = hasGetInfo
     },
-    setUserId (state, id) {
-      state.userId = id
+    setId (state, id) {
+      state.id = id
     },
-    setUserName (state, name) {
-      state.userName = name
+    setQQNumber (state, qqNumber) {
+      state.qqNumber = qqNumber
     },
-    setAccess (state, access) {
-      state.access = access
+    setIdentity (state, identity) {
+      state.identity = identity
+    },
+    setPhoneNumber (state, phoneNumber) {
+      state.phoneNumber = phoneNumber
+    },
+    setName (state, name) {
+      state.name = name
+    },
+    setAvatar (state, avatar) {
+      state.avatar = avatar
+    },
+    setGender (state, gender) {
+      state.gender = gender
+    },
+    setBirthday (state, birthday) {
+      state.birthday = birthday
+    },
+    setAge (state, age) {
+      state.age = age
+    },
+    setHospital (state, hospital) {
+      state.hospital = hospital
+    },
+    setDepartment (state, department) {
+      state.department = department
+    },
+    setPosition (state, position) {
+      state.position = position
+    },
+    setSkill (state, skill) {
+      state.skill = skill
+    },
+    setIntroduction (state, introduction) {
+      state.introduction = introduction
     },
     setToken (state, token) {
       state.token = token
       setToken(token)
-    },
-    setHasGetInfo (state, status) {
-      state.hasGetInfo = status
-    },
-    setMessageCount (state, count) {
-      state.unreadCount = count
-    },
-    setMessageUnreadList (state, list) {
-      state.messageUnreadList = list
-    },
-    setMessageReadedList (state, list) {
-      state.messageReadedList = list
-    },
-    setMessageTrashList (state, list) {
-      state.messageTrashList = list
-    },
-    updateMessageContentStore (state, { msg_id, content }) {
-      state.messageContentStore[msg_id] = content
-    },
-    moveMsg (state, { from, to, msg_id }) {
-      const index = state[from].findIndex(_ => _.msg_id === msg_id)
-      const msgItem = state[from].splice(index, 1)[0]
-      msgItem.loading = false
-      state[to].unshift(msgItem)
     }
-  },
-  getters: {
-    messageUnreadCount: state => state.messageUnreadList.length,
-    messageReadedCount: state => state.messageReadedList.length,
-    messageTrashCount: state => state.messageTrashList.length
   },
   actions: {
     // 登录
-    handleLogin ({ commit }, { userName, password }) {
-      userName = userName.trim()
-      return new Promise((resolve, reject) => {
-        login({
-          userName,
-          password
+    handleLogin ({ commit }, { phoneNumber, password }) {
+      return new Promise(async (resolve, reject) => {
+        normalLogin({
+          phoneNumber, password
         }).then(res => {
-          const data = res.data
-          commit('setToken', data.token)
-          resolve()
+          if (res.status) {
+            // 登录成功
+            const data = res.data
+            commit('setToken', data.token)
+          }
+          resolve(res)
         }).catch(err => {
           reject(err)
         })
       })
     },
     // 退出登录
-    handleLogOut ({ state, commit }) {
+    handleLogout ({ commit }) {
       return new Promise((resolve, reject) => {
-        logout(state.token).then(() => {
-          commit('setToken', '')
-          commit('setAccess', [])
-          resolve()
+        try {
+          this.commit('setToken', '')
+          this.commit('setHasGetInfo', false)
+          this.commit('setIdentity', -1)
+          resolve(true)
+        } catch {
+          reject(false)
+        }
+      })
+    },
+    handleGetInfo ({ commit }) {
+      return new Promise((resolve, reject) => {
+        getInfo().then(res => {
+          if (res.status) {
+            // 获取用户信息成功
+            const data = res.data
+            commit('setIdentity', data.identity)
+            commit('setId', data.id)
+            commit('setPhoneNumber', data.phoneNumber)
+            commit('setName', data.name)
+            commit('setAvatar', data.avatar)
+            commit('setGender', data.gender)
+            if (parseInt(data.identity)) {
+              // 医生
+              commit('setHospital', data.hospital)
+              commit('setDepartment', data.department)
+              commit('setPosition', data.position)
+              commit('setSkill', data.skill)
+              commit('setIntroduction', data.introduction)
+            } else {
+              // 普通用户
+              commit('setBirthday', data.birthday)
+              commit('setAge', data.age)
+            }
+            commit('setHasGetInfo', true)
+            UserInfoStorage.setValue(data)
+          }
+          resolve(res)
         }).catch(err => {
           reject(err)
         })
-        // 如果你的退出登录无需请求接口，则可以直接使用下面三行代码而无需使用logout调用接口
-        // commit('setToken', '')
-        // commit('setAccess', [])
-        // resolve()
       })
     },
-    // 获取用户相关信息
-    getUserInfo ({ state, commit }) {
-      return new Promise((resolve, reject) => {
+    handleResetPassword ({ commit }, { newPassword }) {
+      return new Promise(async (resolve, reject) => {
         try {
-          getUserInfo(state.token).then(res => {
-            const data = res.data
-            commit('setAvatar', data.avatar)
-            commit('setUserName', data.name)
-            commit('setUserId', data.user_id)
-            commit('setAccess', data.access)
-            commit('setHasGetInfo', true)
-            resolve(data)
-          }).catch(err => {
-            reject(err)
-          })
-        } catch (error) {
-          reject(error)
+          const res = await resetPassword({ newPassword })
+          resolve(res)
+        } catch (err) {
+          reject(err)
         }
       })
     },
-    // 此方法用来获取未读消息条数，接口只返回数值，不返回消息列表
-    getUnreadMessageCount ({ state, commit }) {
-      getUnreadCount().then(res => {
-        const { data } = res
-        commit('setMessageCount', data)
-      })
-    },
-    // 获取消息列表，其中包含未读、已读、回收站三个列表
-    getMessageList ({ state, commit }) {
-      return new Promise((resolve, reject) => {
-        getMessage().then(res => {
-          const { unread, readed, trash } = res.data
-          commit('setMessageUnreadList', unread.sort((a, b) => new Date(b.create_time) - new Date(a.create_time)))
-          commit('setMessageReadedList', readed.map(_ => {
-            _.loading = false
-            return _
-          }).sort((a, b) => new Date(b.create_time) - new Date(a.create_time)))
-          commit('setMessageTrashList', trash.map(_ => {
-            _.loading = false
-            return _
-          }).sort((a, b) => new Date(b.create_time) - new Date(a.create_time)))
-          resolve()
-        }).catch(error => {
-          reject(error)
-        })
-      })
-    },
-    // 根据当前点击的消息的id获取内容
-    getContentByMsgId ({ state, commit }, { msg_id }) {
-      return new Promise((resolve, reject) => {
-        const contentItem = state.messageContentStore[msg_id]
-        if (contentItem) {
-          resolve(contentItem)
-        } else {
-          getContentByMsgId(msg_id).then(res => {
-            const content = res.data
-            commit('updateMessageContentStore', { msg_id, content })
-            resolve(content)
-          })
+    handleModifyUserInfo ({ commit, state }, newUserInfo) {
+      return new Promise(async (resolve, reject) => {
+        try {
+          const res = await updateInfo(newUserInfo)
+          if (res.status) {
+            if (state.identity === 0) {
+              // common user
+              commit('setQQNumber', newUserInfo.qqNumber)
+              commit('setName', newUserInfo.name)
+              commit('setAvatar', newUserInfo.avatar)
+              commit('setGender', newUserInfo.gender)
+              commit('setBirthday', newUserInfo.birthday)
+              commit('setAge', newUserInfo.age)
+            } else if (state.identity === 1) {
+              // doctor
+              commit('setSkill', newUserInfo.skill)
+              commit('setIntroduction', newUserInfo.introduction)
+            }
+          }
+          resolve(res)
+        } catch (err) {
+          reject(err)
         }
-      })
-    },
-    // 把一个未读消息标记为已读
-    hasRead ({ state, commit }, { msg_id }) {
-      return new Promise((resolve, reject) => {
-        hasRead(msg_id).then(() => {
-          commit('moveMsg', {
-            from: 'messageUnreadList',
-            to: 'messageReadedList',
-            msg_id
-          })
-          commit('setMessageCount', state.unreadCount - 1)
-          resolve()
-        }).catch(error => {
-          reject(error)
-        })
-      })
-    },
-    // 删除一个已读消息到回收站
-    removeReaded ({ commit }, { msg_id }) {
-      return new Promise((resolve, reject) => {
-        removeReaded(msg_id).then(() => {
-          commit('moveMsg', {
-            from: 'messageReadedList',
-            to: 'messageTrashList',
-            msg_id
-          })
-          resolve()
-        }).catch(error => {
-          reject(error)
-        })
-      })
-    },
-    // 还原一个已删除消息到已读消息
-    restoreTrash ({ commit }, { msg_id }) {
-      return new Promise((resolve, reject) => {
-        restoreTrash(msg_id).then(() => {
-          commit('moveMsg', {
-            from: 'messageTrashList',
-            to: 'messageReadedList',
-            msg_id
-          })
-          resolve()
-        }).catch(error => {
-          reject(error)
-        })
       })
     }
   }

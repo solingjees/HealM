@@ -6,13 +6,15 @@ const { title, cookieExpires, useI18n } = config
 
 export const TOKEN_KEY = 'token'
 
+// 设置token数据，默认为1 day
 export const setToken = (token) => {
   Cookies.set(TOKEN_KEY, token, { expires: cookieExpires || 1 })
 }
 
+// 获取token数据
 export const getToken = () => {
   const token = Cookies.get(TOKEN_KEY)
-  if (token) return token
+  if (token && token !== '') return token
   else return false
 }
 
@@ -20,9 +22,9 @@ export const hasChild = (item) => {
   return item.children && item.children.length !== 0
 }
 
-const showThisMenuEle = (item, access) => {
-  if (item.meta && item.meta.access && item.meta.access.length) {
-    if (hasOneOf(item.meta.access, access)) return true
+const showThisMenuEle = (item, identity) => {
+  if (item.meta && item.meta.identity && item.meta.identity.length > 0) {
+    if (hasOneOf(item.meta.identity, identity)) return true
     else return false
   } else return true
 }
@@ -30,20 +32,19 @@ const showThisMenuEle = (item, access) => {
  * @param {Array} list 通过路由列表得到菜单列表
  * @returns {Array}
  */
-export const getMenuByRouter = (list, access) => {
+export const getMenuByRouter = (routerList, identity) => {
   const res = []
-  forEach(list, item => {
+  routerList = routerList[0].children
+  forEach(routerList, item => {
     if (!item.meta || (item.meta && !item.meta.hideInMenu)) {
+      // 如果item没有meta或者不需要隐藏，就默认需要显示
       const obj = {
-        icon: (item.meta && item.meta.icon) || '',
-        name: item.name,
-        meta: item.meta
+        icon: (item.meta && item.meta.icon) || '', // 该项目所对应的图标
+        name: item.name, // 路由的名称
+        meta: item.meta // 元数据
       }
-      if ((hasChild(item) || (item.meta && item.meta.showAlways)) && showThisMenuEle(item, access)) {
-        obj.children = getMenuByRouter(item.children, access)
-      }
-      if (item.meta && item.meta.href) obj.href = item.meta.href
-      if (showThisMenuEle(item, access)) res.push(obj)
+      // if (item.meta && item.meta.href) obj.href = item.meta.href
+      if (showThisMenuEle(item, identity)) res.push(obj)
     }
   })
   return res
@@ -97,8 +98,7 @@ export const showTitle = (item, vm) => {
   let { title, __titleIsFunction__ } = item.meta
   if (!title) return
   if (useI18n) {
-    if (title.includes('{{') && title.includes('}}') && useI18n) title = title.replace(/({{[\s\S]+?}})/, (m, str) => str.replace(/{{([\s\S]*)}}/, (m, _) => vm.$t(_.trim())))
-    else if (__titleIsFunction__) title = item.meta.title
+    if (title.includes('{{') && title.includes('}}') && useI18n) { title = title.replace(/({{[\s\S]+?}})/, (m, str) => str.replace(/{{([\s\S]*)}}/, (m, _) => vm.$t(_.trim()))) } else if (__titleIsFunction__) title = item.meta.title
     else title = vm.$t(item.name)
   } else title = (item.meta && item.meta.title) || item.name
   return title
@@ -152,11 +152,11 @@ export const getNewTagList = (list, newRoute) => {
 }
 
 /**
- * @param {*} access 用户权限数组，如 ['super_admin', 'admin']
+ * @param {*} access 用户权限数组，如 [0,1,-1]
  * @param {*} route 路由列表
  */
-const hasAccess = (access, route) => {
-  if (route.meta && route.meta.access) return hasOneOf(access, route.meta.access)
+const hasAccess = (identity, route) => {
+  if (route.meta && route.meta.identity) return hasOneOf(route.meta.identity, identity)
   else return true
 }
 
@@ -167,13 +167,13 @@ const hasAccess = (access, route) => {
  * @param {*} routes 路由列表
  * @description 用户是否可跳转到该页
  */
-export const canTurnTo = (name, access, routes) => {
+export const canTurnTo = (name, identity, routes) => {
   const routePermissionJudge = (list) => {
     return list.some(item => {
       if (item.children && item.children.length) {
         return routePermissionJudge(item.children)
       } else if (item.name === name) {
-        return hasAccess(access, item)
+        return hasAccess(identity, item)
       }
     })
   }
