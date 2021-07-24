@@ -1,0 +1,57 @@
+@import '~/src/index.less';
+@fontSize: 20px;
+
+.login-form-wrapper {
+  .login-form {
+    .input-item {
+      .input-item-title {
+        font-size: @fontSize;
+        color: @postTitleColor;
+      }
+
+      .input-item-input {
+        font-size: @fontSize;
+        margin-top: 5px;
+      }
+    }
+
+    .error-group {
+      margin-top: -10px;
+
+      .md-error {
+        color: @errorColor;
+      }
+    }
+
+    .option-line {
+      width: 100%;
+      box-sizing: border-box;
+      .flex(row, space-between, center);
+
+      div {
+        color: @postTitleColor;
+      }
+    }
+
+    .submit-button {
+      width: 100%;
+      box-sizing: border-box;
+      margin: 0px;
+      margin-top: 50px;
+      height: 46px;
+      line-height: 46px;
+      font-size: 18px;
+      border-radius: 10px;
+      background: linear-gradient(to right, @themeColor, @deepBlueColor);
+    }
+  }
+}
+
+.captcha {
+  color: @themeColor;
+  font-size: 18px;
+
+  &.clicked {
+    color: @thirdColor;
+  }
+}

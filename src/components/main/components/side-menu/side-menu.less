@@ -1,0 +1,33 @@
+@import '~/src/index.less';
+.side-menu-wrapper{
+  user-select: none;
+  .side-menu{
+    .menu-item-wrapper {
+      .flex(row, flex-start, center);
+
+      .menu-item-img {
+        width: 35px;
+        height: 35px;
+      }
+
+      .menu-item-title {
+        font-size: 18px;
+        margin-left: 15px;
+        text-decoration: none !important;
+      }
+    }
+      .menu-item {
+        text-decoration: none !important;
+      }
+      .logout-container{
+        position:fixed;
+        bottom: 20px;
+        left: 0px;
+        width: 100%;
+        box-sizing: border-box;
+        margin: 0px;
+        padding-left: 23px;
+        color: rgba(255,255,255,.7);
+      }
+  }
+}

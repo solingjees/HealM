@@ -1,0 +1,35 @@
+@import '~view-design/src/styles/index.less';
+
+@menu-dark-title: #001529;
+@menu-dark-active-bg: #000c17;
+@layout-sider-background: #001529;
+
+.flex(@direction: row, @justifyContent: center, @alignItems: center) {
+  display: flex;
+  flex-flow: @direction nowrap;
+  justify-content: @justifyContent;
+  align-items: @alignItems;
+}
+
+//主题颜色
+@titleColor:#333; //一级颜色，普通颜色
+@postTitleColor:#aaa; //二级颜色，副标题
+@secondColor:#aaa; //二级颜色
+@thirdColor:#d7d7d7; //三级颜色，最淡
+@fadeColor:#d7d7d7; //三级颜色，最淡的颜色，适用于input的输入
+@errorColor:red;
+@themeColor:#54a5f3;
+@deepBlueColor:#012ada;
+@disabledColor: #d7d7d7;
+
+@titleSize:30px;
+@secondSize: 20px;
+@thirdSize: 18px;
+@forthSize:15px;
+@fifthSize:13px;
+
+@boxShadow: 0px 0px 3px 0px #999;
+
+.emphisis{
+    color:@themeColor !important;
+}
