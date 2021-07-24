@@ -1,5 +1,4 @@
 import axios from 'axios'
-import store from '@/store'
 import publicConfig from '@/config'
 import errorHandle from './errorHandle'
 import { getToken } from './util'

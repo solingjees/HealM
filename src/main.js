@@ -23,7 +23,7 @@ import { SwipeCell } from 'vant'
 // import 'v-org-tree/dist/v-org-tree.css'
 // 实际打包时应该不引入mock
 /* eslint-disable */
-if (process.env.NODE_ENV !== 'production') require('@/mock')
+// if (process.env.NODE_ENV !== 'production') require('@/mock')
 
 ViewUI.LoadingBar.config({
    color: '#54a5f3'

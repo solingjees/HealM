@@ -18,8 +18,8 @@ export default {
    * @description api请求基础路径
    */
   baseUrl: {
-    dev: 'http://localhost:3000',
-    pro: 'https://produce.com'
+    dev: 'http://www.vaccum.ltd:8080', // 'http://localhost:3000',
+    pro: 'http://www.vaccum.ltd:8080'
   },
   /**
    * @description 默认打开的首页的路由name值，默认为home
@@ -46,6 +46,12 @@ export default {
    *  @description  不需要用户信息的路由
    */
   openRouters: ['login', 'phoneLogin', 'forgetPassword'],
+  /**
+   *  @description 文件上传请求的路由
+   */
   uploadImageUrl: '/api/home/uploadFile',
+  /**
+   *  @description  写死的健康信息（未来删除）
+   */
   healthItemConfig: HealthItemConfig
 }

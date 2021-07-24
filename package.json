@@ -8,7 +8,8 @@
     "test:unit": "vue-cli-service test:unit",
     "test:e2e": "vue-cli-service test:e2e",
     "lint": "vue-cli-service lint",
-    "dev": "vue-cli-service serve --open"
+    "dev": "cross-env NODE_ENV=development  vue-cli-service serve --open",
+    "dev:native": "cross-env NODE_ENV=developement vue-cli-service serve --open"
   },
   "dependencies": {
     "@vant/touch-emulator": "^1.3.0",

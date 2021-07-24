@@ -94,13 +94,20 @@ export default {
       }
     ]
   }),
+  computed: {
+    id () {
+      return this.$store.state.user.id
+    }
+  },
   mounted () {
     this._getHealthData()
   },
   methods: {
     async _getHealthData () {
       moment.locale('zh-cn')
-      const res = await getHealthData()
+      const res = await getHealthData({
+        userId: this.id
+      })
       if (res.status) {
         const _itemData = res.data.itemData
         _itemData.map(item => {
