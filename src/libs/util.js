@@ -6,6 +6,11 @@ const { title, cookieExpires, useI18n } = config
 
 export const TOKEN_KEY = 'token'
 
+// 检测是否是dev环境
+export const isDev = () => {
+  return process.env.NODE_ENV === 'development'
+}
+
 // 设置token数据，默认为1 day
 export const setToken = (token) => {
   Cookies.set(TOKEN_KEY, token, { expires: cookieExpires || 1 })

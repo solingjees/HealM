@@ -1,4 +1,5 @@
 import store from '@/store'
+import router from '../index'
 
 export default [
   {
@@ -17,7 +18,8 @@ export default [
     redirect: { name: 'info' },
     props: route => ({
       healthItemId: route.query.healthItemId,
-      userId: route.query.userId
+      userId: route.query.userId,
+      initDate: route.query.initDate
     }),
     meta: {
       title: '健康详情',

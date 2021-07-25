@@ -13,7 +13,7 @@ const router = new Router({
   // mode: 'history',
   linkExactActiveClass: 'emphisis'
 })
-const LOGIN_PAGE_NAME = 'login'
+// const LOGIN_PAGE_NAME = 'login'
 
 const turnTo = (to, identity, next) => {
   if (canTurnTo(to.name, identity, routes)) next() // 有权限，可访问

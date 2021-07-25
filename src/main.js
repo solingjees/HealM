@@ -33,6 +33,7 @@ Vue.use(ViewUI)
 Vue.use(VueMaterial)
 Vue.use(Vuelidate)
 Vue.use(SwipeCell)
+
 // Vue.use(TreeTable)
 // Vue.use(VOrgTree)
 /**
