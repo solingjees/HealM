@@ -11,3 +11,9 @@ services:
     restart: always
     ports:
       - "${port}:80"
+
+networks:
+  default:
+    external:
+      name: https
+      
