@@ -6,7 +6,7 @@ services:
       dockerfile: Dockerfile
       args:
         Version: 1.0
-    image: ${container_name}:{tag}
+    image: ${container_name}:${tag}
     container_name: ${container_name}
     restart: always
     ports:
