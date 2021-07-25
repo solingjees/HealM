@@ -51,10 +51,13 @@ export default {
    */
   uploadImageUrl: '/api/home/uploadFile',
   /**
+<<<<<<< HEAD
    * @description
    */
   imageHeader: 'http://www.vaccum.ltd',
   /**
+=======
+>>>>>>> 90bb8ffb5d0742ad03bbc62c8c70824109fdf4a5
    *  @description  写死的健康信息（未来删除）
    */
   healthItemConfig: HealthItemConfig
