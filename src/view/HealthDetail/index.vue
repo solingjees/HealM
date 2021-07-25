@@ -69,6 +69,10 @@ export default {
     userId: {
       type: [String, Number],
       default: ''
+    },
+    initDate: {
+      type: String,
+      default: ''
     }
   },
   data: () => ({
@@ -90,6 +94,8 @@ export default {
           return 'time'
         case 2:
           return 'image'
+        default:
+          return 'line'
       }
     },
     dataType () {
@@ -97,7 +103,11 @@ export default {
     }
   },
   async mounted () {
-    this.date = moment().format('YYYY-MM-DD')
+    if (this.initDate) {
+      this.date = moment(this.initDate).format('YYYY-MM-DD')
+    } else {
+      this.date = moment().format('YYYY-MM-DD')
+    }
     await this._getHealthDetailData(this.date)
     this.addDataTemplate.data = new Array(
       this.healthDetailData.itemData.newRecordName.length
@@ -127,9 +137,9 @@ export default {
     },
     async _getHealthDetailData (date) {
       const res = await getHealthDetailData({
-        healthItemIds: [this.healthItemId],
+        healthItemIds: [parseInt(this.healthItemId)],
         date,
-        userId: this.userId
+        userId: parseInt(this.userId)
       })
       if (res.status) {
         this.healthDetailData = res.data[0].detailData

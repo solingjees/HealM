@@ -1,13 +1,27 @@
 <template>
   <div class="tags-nav">
     <div class="close-con">
-      <Dropdown transfer @on-click="handleTagsOption" style="margin-top: 7px">
-        <Button size="small" type="text">
-          <Icon :size="18" type="ios-close-circle-outline" />
+      <Dropdown
+        transfer
+        style="margin-top: 7px"
+        @on-click="handleTagsOption"
+      >
+        <Button
+          size="small"
+          type="text"
+        >
+          <Icon
+            :size="18"
+            type="ios-close-circle-outline"
+          />
         </Button>
         <DropdownMenu slot="list">
-          <DropdownItem name="close-all">关闭所有</DropdownItem>
-          <DropdownItem name="close-others">关闭其他</DropdownItem>
+          <DropdownItem name="close-all">
+            关闭所有
+          </DropdownItem>
+          <DropdownItem name="close-others">
+            关闭其他
+          </DropdownItem>
         </DropdownMenu>
       </Dropdown>
     </div>
@@ -18,25 +32,37 @@
     >
       <li
         v-for="(item, key) of menuList"
-        @click="handleTagsOption(key)"
         :key="key"
+        @click="handleTagsOption(key)"
       >
         {{ item }}
       </li>
     </ul>
     <div class="btn-con left-btn">
-      <Button type="text" @click="handleScroll(240)">
-        <Icon :size="18" type="ios-arrow-back" />
+      <Button
+        type="text"
+        @click="handleScroll(240)"
+      >
+        <Icon
+          :size="18"
+          type="ios-arrow-back"
+        />
       </Button>
     </div>
     <div class="btn-con right-btn">
-      <Button type="text" @click="handleScroll(-240)">
-        <Icon :size="18" type="ios-arrow-forward" />
+      <Button
+        type="text"
+        @click="handleScroll(-240)"
+      >
+        <Icon
+          :size="18"
+          type="ios-arrow-forward"
+        />
       </Button>
     </div>
     <div
-      class="scroll-outer"
       ref="scrollOuter"
+      class="scroll-outer"
       @DOMMouseScroll="handlescroll"
       @mousewheel="handlescroll"
     >
@@ -47,19 +73,20 @@
       >
         <transition-group name="taglist-moving-animation">
           <Tag
-            type="dot"
             v-for="(item, index) in list"
             ref="tagsPageOpened"
             :key="`tag-nav-${index}`"
+            type="dot"
             :name="item.name"
             :data-route-item="item"
-            @on-close="handleClose(item)"
-            @click.native="handleClick(item)"
             :closable="item.name !== $config.homeName"
             :color="isCurrentTag(item) ? 'primary' : 'default'"
+            @on-close="handleClose(item)"
+            @click.native="handleClick(item)"
             @contextmenu.prevent.native="contextMenu(item, $event)"
-            >{{ showTitleInside(item) }}</Tag
           >
+            {{ showTitleInside(item) }}
+          </Tag>
         </transition-group>
       </div>
     </div>
@@ -99,6 +126,23 @@ export default {
       const { name, params, query } = this.value
       return { name, params, query }
     }
+  },
+  watch: {
+    $route (to) {
+      this.getTagElementByRoute(to)
+    },
+    visible (value) {
+      if (value) {
+        document.body.addEventListener('click', this.closeMenu)
+      } else {
+        document.body.removeEventListener('click', this.closeMenu)
+      }
+    }
+  },
+  mounted () {
+    setTimeout(() => {
+      this.getTagElementByRoute(this.$route)
+    }, 200)
   },
   methods: {
     handlescroll (e) {
@@ -227,23 +271,6 @@ export default {
     closeMenu () {
       this.visible = false
     }
-  },
-  watch: {
-    $route (to) {
-      this.getTagElementByRoute(to)
-    },
-    visible (value) {
-      if (value) {
-        document.body.addEventListener('click', this.closeMenu)
-      } else {
-        document.body.removeEventListener('click', this.closeMenu)
-      }
-    }
-  },
-  mounted () {
-    setTimeout(() => {
-      this.getTagElementByRoute(this.$route)
-    }, 200)
   }
 }
 </script>

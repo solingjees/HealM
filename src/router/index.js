@@ -5,7 +5,7 @@ import store from '@/store'
 import iView from 'view-design'
 import { setToken, getToken, canTurnTo, setTitle } from '@/libs/util'
 import config from '@/config'
-const { homeName } = config
+// const { homeName } = config
 
 Vue.use(Router)
 const router = new Router({
@@ -13,7 +13,6 @@ const router = new Router({
   // mode: 'history',
   linkExactActiveClass: 'emphisis'
 })
-const LOGIN_PAGE_NAME = 'login'
 
 const turnTo = (to, identity, next) => {
   if (canTurnTo(to.name, identity, routes)) next() // 有权限，可访问
@@ -41,7 +40,7 @@ router.beforeEach((to, from, next) => {
       // 没有获取到用户信息
       store.dispatch('handleGetInfo').then(res => {
         turnTo(to, res.data.identity, next)
-      }).catch((err) => {
+      }).catch(() => {
         // 出现问题就设置用户没有登录
         setToken('')
         next({
