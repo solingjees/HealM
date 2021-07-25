@@ -41,7 +41,7 @@ router.beforeEach((to, from, next) => {
       // 没有获取到用户信息
       store.dispatch('handleGetInfo').then(res => {
         turnTo(to, res.data.identity, next)
-      }).catch((err) => {
+      }).catch(() => {
         // 出现问题就设置用户没有登录
         setToken('')
         next({

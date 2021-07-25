@@ -1,0 +1,13 @@
+version: "3"
+services:
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        Version: 1.0
+    image: ${container_name}
+    container_name: ${container_name}:${tag}
+    restart: always
+    ports:
+      - "${port}:80"
