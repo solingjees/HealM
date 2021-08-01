@@ -2,7 +2,7 @@
   <div>
     <div
       v-for="item in uploadFileList"
-      :key="'uploadFile-' + item.name"
+      :key="'uploadFile-' + item.url"
       class="demo-upload-list"
     >
       <template v-if="item.status === 'finished'">
@@ -23,11 +23,11 @@
       </template>
     </div>
     <Upload
-      v-if="uploadFileList.length < 1"
+      v-show="uploadFileList.length < limit"
       ref="upload"
       :show-upload-list="false"
       :format="['jpg', 'jpeg', 'png']"
-      :max-size="2048"
+      :max-size="1024"
       type="drag"
       :on-format-error="handleFormatError"
       :on-exceeded-size="handleMaxSize"
@@ -52,6 +52,16 @@
 <script>
 export default {
   name: 'UploadFile',
+  props: {
+    limit: {
+      type: Number,
+      default: 1
+    },
+    initialFileList: {
+      type: Array,
+      default: () => ([])
+    }
+  },
   data: () => ({
     uploadFileList: []
   }),
@@ -65,30 +75,59 @@ export default {
     },
     token () {
       return this.$store.state.user.token
+    },
+    defaultFileList () {
+      return this.initialFileList.reduce(function (prev, cur) {
+        prev.push({
+          name: cur,
+          url: cur,
+          status: 'finished'
+        })
+        return prev
+      }, [])
     }
+  },
+  watch: {
+    defaultFileList (newval, oldval) {
+      this.$refs.upload.fileList = newval
+      this.uploadFileList = newval
+    }
+  },
+  mounted () {
+    this.uploadFileList = this.$refs.upload.fileList
   },
   methods: {
     handleFormatError (file) {
       this.$Message.error('格式错误')
     },
     handleMaxSize (file) {
-      this.$Message.error('图片不得大于2M')
+      this.$Message.error('图片不得大于1M')
     },
     handleBeforeUpload () {
-      const check = this.uploadFileList.length <= 1
+      const check = this.uploadFileList.length <= this.limit
       if (!check) {
-        this.$Message.error('只能上传一张图片')
+        this.$Message.error(`只能上传${this.limit}张图片`)
       }
       return check
     },
     handleRemove (file) {
-      this.uploadFileList = []
+      const index = this.$refs.upload.fileList.findIndex(fileListItem => {
+        return fileListItem.url === file.url
+      })
+      this.$refs.upload.fileList.splice(index, 1)
     },
     handleSuccess (res, file) {
       if (res.status) {
-        file.url = res.data.url
-        this.uploadFileList.push(file)
-        this.$emit('on-change-image', file.url)
+        file.url = this.$config.imageHeader + res.data.url
+        if (this.limit === 1) {
+          this.$emit('on-change-image', file.url)
+        } else {
+          const fileUrlList = this.uploadFileList.reduce(function (prev, cur) {
+            prev.push(cur.url)
+            return prev
+          }, [])
+          this.$emit('on-change-image', fileUrlList)
+        }
       }
     }
   }

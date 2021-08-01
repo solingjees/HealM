@@ -8,17 +8,17 @@
       {{ require('moment')(statisticsData.endTime).format('YYYY/MM/DD') }}
     </div>
     <div id="chart">
-      <!-- 折线图 -->
-      <line-chart
-        v-if="statisticsData.type === 1"
+      <!-- 柱状图 -->
+      <block-chart
+        v-if="statisticsData.type === 0"
         :health-item-attr="healthItem"
         :record-data="allRecordData"
         :start-time="statisticsData.startTime"
         :end-time="statisticsData.endTime"
       />
-      <!-- 区域图 -->
-      <area-chart
-        v-if="statisticsData.type === 2"
+      <!-- 折线图 -->
+      <line-chart
+        v-if="statisticsData.type === 1"
         :health-item-attr="healthItem"
         :record-data="allRecordData"
         :start-time="statisticsData.startTime"
@@ -35,13 +35,13 @@
 import StatisticsDataCard from './statisticsDataCard.vue'
 import { getHealthStatisticsData } from '_api/home'
 import LineChart from './displayTemplates/line.vue'
-import AreaChart from './displayTemplates/area.vue'
+import BlockChart from './displayTemplates/block.vue'
 
 export default {
   name: 'Statistics',
   components: {
     'line-chart': LineChart,
-    'area-chart': AreaChart,
+    'block-chart': BlockChart,
     StatisticsDataCard
   },
   props: {

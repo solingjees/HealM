@@ -59,11 +59,11 @@
                 v-for="(value,index) in newHealthItem.data"
               >
                 <span
-                  :key="index"
+                  :key="'health-item-data-'+ index"
                   class="data"
                 >{{ value }}</span>
                 <span
-                  :key="index"
+                  :key="'health-item-unit-'+index"
                   class="unit"
                 >{{ index? '分':"时" }}</span>
               </template>

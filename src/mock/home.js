@@ -405,35 +405,72 @@ export const getHealthDetailData = req => {
       //         advice:'没有建议'
       //       }
       //   },
+      // {
+      //   id: 1,
+      //   detailData: {
+      //     itemData: {
+      //       id: 7,
+      //       name: '睡眠',
+      //       unit: '无',
+      //       icon: 'sleep',
+      //       type: 3, // 0表示文字，1表示图片，2表示区域图，3表示饼图,4表示折线图
+      //       record: 0, // 0表示历史记录，1表示当日记录
+      //       statistics: 1, // 0表示需要统计，1表示不需要统计
+      //       dataType: 1, // 0表示float，1代表datetime，2表示picture
+      //       newRecordName: ['入睡时间', '睡醒时间'],
+      //       isAssign: true
+      //     },
+      //     recordData: [
+      //       {
+      //         id: 1,
+      //         data: ['2021-07-03 23:11:23', '2021-07-04 06:30:24'],
+      //         createTime: '2021-07-04 12:02:02'
+      //       },
+      //       {
+      //         id: 2,
+      //         data: ['2021-07-01 23:11:23', '2021-07-02 03:30:24'],
+      //         createTime: '2021-07-03 12:02:02'
+      //       },
+      //       {
+      //         id: 3,
+      //         data: ['2021-06-30 23:11:23', '2021-07-01 06:30:24'],
+      //         createTime: '2021-07-02 12:02:02'
+      //       }
+      //     ],
+      //     possibleState: '非常健康',
+      //     adviceColor: 'green',
+      //     advice: '没有建议'
+      //   }
+      // }
       {
-        id: 1,
+        id: 11,
         detailData: {
           itemData: {
-            id: 7,
-            name: '睡眠',
+            id: 9,
+            name: '排泄物',
             unit: '无',
             icon: 'sleep',
-            type: 3, // 0表示文字，1表示图片，2表示区域图，3表示饼图,4表示折线图
+            type: 1, // 0表示文字，1表示图片，2表示区域图，3表示饼图,4表示折线图
             record: 0, // 0表示历史记录，1表示当日记录
-            statistics: 1, // 0表示需要统计，1表示不需要统计
-            dataType: 1, // 0表示float，1代表datetime，2表示picture
-            newRecordName: ['入睡时间', '睡醒时间'],
+            statistics: 0, // 0表示需要统计，1表示不需要统计
+            dataType: 2, // 0表示float，1代表datetime，2表示picture
+            newRecordName: ['排泄物照片'],
             isAssign: true
           },
           recordData: [
             {
               id: 1,
-              data: ['2021-07-03 23:11:23', '2021-07-04 06:30:24'],
+              data: ['https://ss1.bdstatic.com/70cFuXSh_Q1YnxGkpoWK1HF6hhy/it/u=199412028,2333531255&fm=26&gp=0.jpg', 'https://th.bing.com/th/id/OIP.hoRufpMOOSBsZE43KScOwAHaHa?w=221&h=220&c=7&o=5&dpr=2&pid=1.7', 'https://th.bing.com/th/id/OIP.F__-JRrRzHl83qYKjNKBVQHaDn?w=317&h=170&c=7&o=5&dpr=2&pid=1.7'],
               createTime: '2021-07-04 12:02:02'
             },
             {
               id: 2,
-              data: ['2021-07-01 23:11:23', '2021-07-02 03:30:24'],
+              data: ['https://ss1.bdstatic.com/70cFuXSh_Q1YnxGkpoWK1HF6hhy/it/u=199412028,2333531255&fm=26&gp=0.jpg', 'https://ss1.bdstatic.com/70cFuXSh_Q1YnxGkpoWK1HF6hhy/it/u=199412028,2333531255&fm=26&gp=0.jpg'],
               createTime: '2021-07-03 12:02:02'
             },
             {
               id: 3,
-              data: ['2021-06-30 23:11:23', '2021-07-01 06:30:24'],
+              data: ['https://ss1.bdstatic.com/70cFuXSh_Q1YnxGkpoWK1HF6hhy/it/u=199412028,2333531255&fm=26&gp=0.jpg', 'https://ss1.bdstatic.com/70cFuXSh_Q1YnxGkpoWK1HF6hhy/it/u=199412028,2333531255&fm=26&gp=0.jpg'],
               createTime: '2021-07-02 12:02:02'
             }
           ],
@@ -497,7 +534,7 @@ export const getHealthStatisticsData = req => {
       statisticsData: {
         startTime: '2021-01-12 12:02:02',
         endTime: '2021-01-14 12:02:02',
-        type: 2, // 0表示柱状图，1代表折线图,2代表区域图
+        type: 0, // 0表示柱状图，1代表折线图
         statisticsName: [
           {
             name: '平均清醒时长',

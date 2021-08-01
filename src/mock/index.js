@@ -9,10 +9,10 @@ Mock.setup({
 })
 
 // 登录相关和获取用户信息
-Mock.mock(/\/login\/normalLogin/, normalLogin)
+// Mock.mock(/\/login\/normalLogin/, normalLogin)
 
 // 公共角色
-Mock.mock(/\/home\/getInfo/, getInfo)
+// Mock.mock(/\/home\/getInfo/, getInfo)
 
 // 获取手机验证码
 Mock.mock(/\/login\/sendPhoneVerify/, sendPhoneVerify)
@@ -24,19 +24,19 @@ Mock.mock(/\/login\/checkPhoneVerify/, checkPhoneVerify)
 Mock.mock(/\/home\/resetPassword/, resetPassword)
 
 // 上传图片
-Mock.mock(/\/home\/uploadFile/, uploadFile)
+// Mock.mock(/\/home\/uploadFile/, uploadFile)
 
 // 更新用户信息
 Mock.mock(/\/home\/updateInfo/, updateInfo)
 
 // 获取用户健康数据
-Mock.mock(/\/home\/getHealthData/, getHealthData)
+// Mock.mock(/\/home\/getHealthData/, getHealthData)
 
 // 获取用户详细健康数据
 Mock.mock(/\/home\/getHealthDetailData/, getHealthDetailData)
 
 // 更新用户数据
-Mock.mock(/\/user\/addHealthDetailData/, addHealthDetailData)
+// Mock.mock(/\/user\/addHealthDetailData/, addHealthDetailData)
 
 // 编辑用户健康记录
 Mock.mock(/\/user\/updateHealthDetailData/, updateHealthDetailData)

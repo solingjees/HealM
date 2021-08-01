@@ -45,6 +45,8 @@
       <upload
         v-if="type === 'image'"
         class="content"
+        :limit="uploadLimit"
+        :initial-file-list="value instanceof Array? value : []"
         @on-change-image="changeImageUrl"
       />
       <Input
@@ -77,7 +79,7 @@ export default {
       default: ''
     },
     value: {
-      type: [String, Number],
+      type: [String, Number, Array],
       default: ''
     },
     type: {
@@ -92,6 +94,10 @@ export default {
     time: {
       type: String,
       default: ''
+    },
+    'upload-limit': {
+      type: Number,
+      default: 1
     }
   },
   data: () => ({
