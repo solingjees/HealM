@@ -1,13 +1,16 @@
 <template>
-  <div>文章推荐</div>
+  <router-view></router-view>
 </template>
-
 <script>
 export default {
-  name: 'Article'
+  name:'article',
+  metaInfo:{
+    meta:[
+      {name:'referrer',content:'never'}
+    ]
+  }
 }
 </script>
-
 <style lang="less" scoped>
 @import './article.less';
 </style>

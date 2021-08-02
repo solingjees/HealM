@@ -10,6 +10,8 @@ import Vuelidate from 'vuelidate'
 // import { directive as clickOutside } from 'v-click-outside-x'
 import installPlugin from '@/plugin'
 import errorHandle from '_utils/errorHandle'
+import VueSocketIO from 'vue-socket.io'
+import Meta from 'vue-meta'
 
 import './index.less'
 import '@/assets/icons/iconfont.css'
@@ -33,6 +35,16 @@ Vue.use(ViewUI)
 Vue.use(VueMaterial)
 Vue.use(Vuelidate)
 Vue.use(SwipeCell)
+Vue.use(Meta)
+
+Vue.use(new VueSocketIO({
+  debug: false,
+  //连接目标的Socket
+  connection: 'http://localhost:9999',
+  options:{
+      autoConnect:false
+  }
+}))
 // Vue.use(TreeTable)
 // Vue.use(VOrgTree)
 /**

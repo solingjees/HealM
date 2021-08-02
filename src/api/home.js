@@ -16,3 +16,5 @@ export const getHealthData = (data) => axios.post(HEADER + '/getHealthData', dat
 export const getHealthDetailData = (data) => axios.post(HEADER + '/getHealthDetailData', data)
 
 export const getHealthStatisticsData = (data) => axios.post(HEADER + '/getHealthStatisticsData', data)
+
+export const getChatList = (data) => axios.post(HEADER + '/getChatList',data)
