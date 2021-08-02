@@ -12,7 +12,7 @@ import ECharts from 'vue-echarts'
 import { use } from 'echarts/core'
 import moment from 'moment'
 import { CanvasRenderer } from 'echarts/renderers'
-import { CandlestickChart } from 'echarts/charts'
+import { BarChart } from 'echarts/charts'
 import {
   TooltipComponent,
   LegendComponent,
@@ -22,7 +22,7 @@ import {
 
 use([
   CanvasRenderer,
-  CandlestickChart,
+  BarChart,
   TooltipComponent,
   LegendComponent,
   GridComponent,
@@ -63,44 +63,25 @@ export default {
     }
   },
   methods: {
-    testTime (string) {
-      return /^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$/.test(string)
-    },
-    parseTimeArray (time1, time2) {
-      const duration = moment.duration(moment(time2).diff(moment(time1))) // 获取毫秒差值
-      const _data = []
-      _data[0] = moment(time1).toArray()
-      _data[0][0] = 1970
-      _data[0][1] = 1
-      _data[0][2] = 1
-      const newTime1 = moment(_data[0]).format('YYYY-MM-DD HH:mm:ss')
-      const newTime2 = moment(_data[0]).add(duration).format('YYYY-MM-DD HH:mm:ss')
-      return [newTime1, newTime2]
-    },
     getEchartOptions () {
       const that = this
       const dataArray = (() => {
-        return this.recordData.reduce(function (prev, cur, index, arr) {
-          if (cur.data.length === 2 && that.testTime(cur.data[0])) {
-            // 属于时间
-            const _data = that.parseTimeArray(...cur.data)
-            prev.push([cur.createTime, ..._data, ..._data])
-          } else {
-            prev.push([cur.createTime, ...cur.data, ...cur.data])
-          }
-          return prev
-        }, [])
-      })()
-
-      const yaxisType = (() => {
-        if (this.recordData.length > 0 &&
-       that.testTime(this.recordData[0].data[0])) {
-          return 'time'
+        // 检测类别
+        if (this.healthItemAttr.newRecordName.length === 2 && this.healthItemAttr.unit === '无') {
+          // 数据由两个数据进行差值计算得出，没有单位说明是时间数据
+          return this.recordData.reduce(function (prev, cur, index, arr) {
+            const time0 = moment(cur.data[0])
+            const time1 = moment(cur.data[1])
+            const duration = Math.abs(time0.diff(time1)) // 计算时间差值
+            prev.push([cur.createTime, duration])
+            return prev
+          }, [])
         } else {
-          return 'value'
+          /**
+           * ! 这部分暂时没有需求进行使用，后续有业务时进行更改
+           */
         }
       })()
-
       return {
         tooltip: {
           axisPointer: {
@@ -126,15 +107,16 @@ export default {
               }
               prev += str
               return prev
-            }, '') + (that.recordData.length > 0 && that.recordData[0].data.length === 2
-              ? (() => {
-                const duration = moment.duration(moment(that.recordData[index].data[1]).diff(that.recordData[index].data[0]))
-                const hours = duration.hours()
-                const minutes = duration.minutes()
-                return hours + '小时' + minutes + '分钟'
-              })() : ''
-
-            )
+            }, '') +
+             // 如果有两个数据，并且没有单位，说明是时间，求值
+             (() => {
+               if (that.healthItemAttr.newRecordName.length === 2 && that.healthItemAttr.unit === '无') {
+                 const duration = moment.duration(params.data[1])
+                 return '共睡眠' + duration.hours() + '时' + duration.minutes() + '分'
+               } else {
+                 return ''
+               }
+             })()
           }
         },
         xAxis: {
@@ -175,9 +157,9 @@ export default {
           }
         },
         grid: {
-          left: '45',
-          right: '10',
-          bottom: '75',
+          left: '50',
+          right: '23',
+          bottom: '100',
           containLabel: false
         },
         dataZoom: [
@@ -194,16 +176,32 @@ export default {
           splitArea: {
             show: true
           },
-          type: yaxisType,
+          axisLabel: {
+            formatter (value, index) {
+              if (that.healthItemAttr.newRecordName.length === 2 && that.healthItemAttr.unit === '无') {
+                return moment.duration(value).locale('zh-cn').humanize()
+              }
+            }
+          },
+          type: 'value',
           name: `${this.healthItemAttr.name}` + (this.healthItemAttr.unit === '' || this.healthItemAttr.unit === '无' ? '' : '(' + this.healthItemAttr.unit + ')')
         },
         series: [
           {
             name: this.healthItemAttr.name + '表',
-            type: 'candlestick',
+            type: 'bar',
             barWidth: '20rem',
             data: dataArray,
-            dimensions: ['date', 'open', 'close', 'highest', 'lowest'],
+            label: {
+              show: true,
+              position: 'top',
+              formatter: (params) => {
+                if (this.healthItemAttr.newRecordName.length === 2 && this.healthItemAttr.unit === '无') {
+                  const duration = moment.duration(params.data[1])
+                  return duration.hours() + '时' + duration.minutes() + '分'
+                }
+              }
+            },
             emphasis: {
               itemStyle: {
                 shadowBlur: 10,

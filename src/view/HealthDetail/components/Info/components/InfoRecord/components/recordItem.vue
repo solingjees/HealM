@@ -23,7 +23,12 @@
           @click="deleteRecord"
         />
       </template>
-      <div class="record-item-content">
+      <div
+        class="record-item-content"
+        :class="{
+          image: type === 'image'
+        }"
+      >
         <div
           v-for="(item, index) in data.data"
           :key="'record-item-single-data-' + index"
@@ -32,15 +37,23 @@
             highlight: isHighlight,
           }"
         >
-          <div class="title">
-            {{ dataNameList[index] }}
-          </div>
-          <div
-            class="data"
-            :class="{ 'time-data': unit === '无' }"
-          >
-            {{ item }}{{ unit === '无' ? '' : unit }}
-          </div>
+          <template v-if="type !== 'image'">
+            <div class="title">
+              {{ dataNameList[index] }}
+            </div>
+            <div
+              class="data"
+              :class="{ 'time-data': unit === '无' }"
+            >
+              {{ item }}{{ unit === '无' ? '' : unit }}
+            </div>
+          </template>
+          <template v-else>
+            <img
+              :src="item"
+              :alt="dataNameList[index]"
+            >
+          </template>
         </div>
         <div class="record-item-time">
           {{ time }}
@@ -80,6 +93,10 @@ export default {
     isTodayRecord: {
       type: Number,
       default: 0
+    },
+    type: {
+      type: String,
+      default: ''
     }
   },
   computed: {
@@ -126,11 +143,18 @@ export default {
   padding: 0rem 1rem;
   height: fit-content;
   .flex(row,space-between,center);
+   &.image{
+      border-right: none;
+      .flex(row,flex-start,center);
+    }
   .record-item-single-data {
     flex: 1;
     margin: 0.5rem 0rem;
     border-right: 1px solid #cdcdcd;
     .flex(column,center,center);
+    img{
+      width: 2rem;
+    }
     &.highlight {
       .title {
         color: white !important;

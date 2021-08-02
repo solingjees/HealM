@@ -32,6 +32,7 @@
         v-for="(item, index) in healthDetailData.itemData.newRecordName"
         :key="'input-item-' + index"
         :title="item"
+        :upload-limit="3"
         :type="inputType"
         @on-change-value="(value) => changeValue('data', value, index)"
       >
@@ -55,6 +56,7 @@ import InputItem from '@/components/inputItem'
 import { addHealthDetailData } from '@/api/user'
 import { getHealthDetailData } from '@/api/home'
 import moment from 'moment'
+import { parse } from 'qs'
 export default {
   name: 'HealthDetail',
   components: {
@@ -115,7 +117,17 @@ export default {
   },
   methods: {
     async submit () {
-      const res = await addHealthDetailData(this.addDataTemplate)
+      const postData = {
+        ...this.addDataTemplate,
+        healthItemId: parseInt(this.healthItemId)
+      }
+      postData.date = this.addDataTemplate.date
+      if (this.addDataTemplate.data instanceof Array) {
+        postData.data = this.addDataTemplate.data[0]
+      } else {
+        postData.data = this.addDataTemplate.data
+      }
+      const res = await addHealthDetailData(postData)
       if (res.status) {
         this.showModal = false
       }

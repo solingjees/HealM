@@ -144,12 +144,6 @@ export default {
           },
           shape: 'circle',
           splitNumber: 0,
-          name: {
-            show: true,
-            textStyle: {
-              color: '#54a5f3'
-            }
-          },
           splitArea: {
             show: false
           },

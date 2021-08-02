@@ -15,7 +15,8 @@ module.exports = {
       'x-invalid-end-tag': false
     }],
     'no-undef': 'off',
-    'camelcase': 'off'
+    'camelcase': 'off',
+    "no-return-assign": 'error' 
   },
   parserOptions: {
     parser: 'babel-eslint'

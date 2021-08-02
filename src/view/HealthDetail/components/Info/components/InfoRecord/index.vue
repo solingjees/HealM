@@ -12,6 +12,7 @@
         :key="'record-item-' + recordIndex"
         :data-name-list="dataNameList"
         :data="item"
+        :type="inputType"
         :unit="healthDetailData.itemData.unit"
         :is-highlight="recordIndex === index"
         :is-today-record="parseInt(healthDetailData.itemData.record)"
@@ -32,7 +33,11 @@
         :key="'input-item-' + index"
         :title="item"
         :type="inputType"
-        :value="modalPreData.data ? modalPreData.data[index] : ''"
+        :upload-limit="3"
+        :value="modalPreData.data ?
+          ( healthDetailData.itemData.dataType !== 2? //该项目是否是图片数据
+            modalPreData.data[index] : modalPreData.data )
+          : ''"
         @on-change-value="(value) => changeValue('data', value, index)"
       >
         <div
@@ -106,6 +111,8 @@ export default {
           return 'time'
         case 2:
           return 'image'
+        default:
+          return 'line'
       }
     },
     dataType () {

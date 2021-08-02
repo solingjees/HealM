@@ -40,9 +40,6 @@ export default {
       type: Object,
       default: () => ({})
     },
-    date: {
-      type: String
-    },
     healthDetailData: {
       type: Object,
       default: () => ({})

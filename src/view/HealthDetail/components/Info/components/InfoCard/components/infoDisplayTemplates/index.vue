@@ -6,6 +6,13 @@
       :record-data="recordData"
       :index="index"
     />
+    <my-picture
+      v-if="healthItemAttr && parseInt(healthItemAttr.type) === 1"
+      :health-item-attr="healthItemAttr"
+      :record-data="recordData"
+      :index="index"
+      :date="date"
+    />
     <my-area
       v-if="healthItemAttr && parseInt(healthItemAttr.type) === 2"
       :health-item-attr="healthItemAttr"
@@ -35,13 +42,15 @@ import Word from './templates/word.vue'
 import Area from './templates/area.vue'
 import Line from './templates/line.vue'
 import Pie from './templates/pie.vue'
+import Picture from './templates/picture.vue'
 export default {
   name: 'InfoDisplayTemplate',
   components: {
     'my-word': Word,
     'my-area': Area,
     'my-line': Line,
-    'my-pie': Pie
+    'my-pie': Pie,
+    'my-picture': Picture
   },
   props: {
     healthItemAttr: {
