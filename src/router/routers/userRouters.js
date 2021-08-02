@@ -60,7 +60,16 @@ export default [
       icon: 'nurse.png',
       identity: [0]
     },
-    component: () => import('@/view/diagnose')
+    component: () => import('@/view/diagnose'),
+  },
+  {
+    path: 'chat',
+    name: 'chat',
+    component: () => import('@/view/chat'),
+    meta: {
+      title: '病情聊天',
+      hideInMenu: true
+    }
   },
   {
     path: 'prescription',
@@ -75,11 +84,30 @@ export default [
   {
     path: 'article',
     name: 'article',
+    redirect:{ name: 'list' },
     component: () => import('@/view/article'),
     meta: {
       title: '文章推荐',
       icon: 'book.png',
       identity: [0]
-    }
+    },
+    children: [
+      {
+        path: 'list',
+        name: 'list',
+        meta: {
+          title: '文章列表'
+        },
+        component: () => import('@/view/article/components/list')
+      },
+      {
+        path: 'content',
+        name: 'content',
+        meta: {
+          title: '文章详情'
+        },
+        component: () => import('@/view/article/components/content')
+      },
+    ]
   }
 ]

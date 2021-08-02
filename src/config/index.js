@@ -18,7 +18,7 @@ export default {
    * @description api请求基础路径
    */
   baseUrl: {
-    dev: 'http://www.vaccum.ltd:8080', // 'http://localhost:3000',
+    dev: 'http://localhost:8081', // 'http://localhost:3000',
     pro: 'http://www.vaccum.ltd:8080'
   },
   /**
