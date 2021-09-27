@@ -15,7 +15,7 @@
   </div>
 </template>
 <script>
-import axios from 'axios'
+// import axios from 'axios'
 // import articles from '@/assets/article'
 export default {
   name: 'List',
