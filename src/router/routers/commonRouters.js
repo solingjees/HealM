@@ -52,5 +52,43 @@ export default [
       title: '用户中心',
       hideInMenu: true
     }
+  },
+  {
+    path: 'chat',
+    name: 'chat',
+    props: route => {
+      return {
+        windowId: parseInt(route.query.windowId),
+        name: route.query.name,
+        opponentId: parseInt(route.query.opponentId),
+        isAssigned: route.query.isAssigned == 'true' || route.query.isAssigned == true
+      }
+    },
+    component: () => import('@/view/chat/index.vue'),
+    meta: {
+      title: '病情聊天',
+      icon: 'chat.png',
+      hideInMenu: true
+    },
+    children: [
+      {
+        path: 'chat-patient',
+        name: 'chat-patient',
+        props: true,
+        meta: {
+          title: '病情聊天'
+        },
+        component: () => import('@/view/chat/components/childrens/patient.vue')
+      },
+      {
+        path: 'chat-doctor',
+        name: 'chat-doctor',
+        props: true,
+        meta: {
+          title: '病情聊天'
+        },
+        component: () => import('@/view/chat/components/childrens/doctor.vue')
+      }
+    ]
   }
 ]

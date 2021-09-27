@@ -137,7 +137,7 @@ export default {
             label: {
               show: true,
               formatter: function (params) {
-                return moment(params.data).format('YYYY-MM-DD HH:mm')
+                return moment(params.value).format('YYYY-MM-DD HH:mm')
               },
               backgroundColor: '#54a5f3'
             },

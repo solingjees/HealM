@@ -17,4 +17,19 @@ export const getHealthDetailData = (data) => axios.post(HEADER + '/getHealthDeta
 
 export const getHealthStatisticsData = (data) => axios.post(HEADER + '/getHealthStatisticsData', data)
 
-export const getChatList = (data) => axios.post(HEADER + '/getChatList',data)
+/**
+ * 获取聊天列表数据
+ * @param {*} data
+ * @returns promise
+ */
+export const getChatList = (data) => axios.post(HEADER + '/getChatList', data)
+
+/**
+ * 获取处方详情
+ * @param {Object} data 提交数据
+ * @returns promise
+ */
+export const getPrescriptionDetail = data => axios.post(HEADER + '/getPrescriptionDetail', data)
+
+/// 结束签约
+export const completeContract = (data) => axios.post(HEADER + '/completeContract', data)

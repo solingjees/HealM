@@ -81,7 +81,7 @@
           <Blank />
           <Content class="content-wrapper">
             <router-view />
-            <copyright v-if="routeName !== 'about'" />
+            <copyright v-if="isNeedCopyRight" />
           </Content>
         </Layout>
       </Content>
@@ -131,6 +131,9 @@ export default {
     })
   },
   computed: {
+    isNeedCopyRight () {
+      return !this.$config.noCopyRightComponentsRouterList.includes(this.routeName)
+    },
     routeName () {
       return this.$route.name
     },
@@ -193,7 +196,6 @@ export default {
     ...mapActions(['handleLogin', 'getUnreadMessageCount', 'handleLogout']),
     // 在mask上点击
     clickMask () {
-      console.log('click mask')
       this.collapsed = true
     },
     turnToPage (route) {

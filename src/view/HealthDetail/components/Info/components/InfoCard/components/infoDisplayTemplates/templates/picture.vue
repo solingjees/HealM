@@ -38,7 +38,6 @@
 
 <script>
 import CardFolder from '@/components/CardFolder'
-import moment from 'moment'
 
 export default {
   name: 'InfoDisplayTemplatePicture',
@@ -63,17 +62,10 @@ export default {
       default: ''
     }
   },
-  data () {
-    return {
-
-    }
-  },
   computed: {
     currentData () {
       return this.recordData[this.index]
     }
-  },
-  methods: {
   }
 }
 </script>

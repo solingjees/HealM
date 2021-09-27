@@ -14,6 +14,7 @@ module.exports = {
     'vue/no-parsing-error': [2, {
       'x-invalid-end-tag': false
     }],
+    'vue/html-self-closing':'off',
     'no-undef': 'off',
     'camelcase': 'off',
     "no-return-assign": 'error' 

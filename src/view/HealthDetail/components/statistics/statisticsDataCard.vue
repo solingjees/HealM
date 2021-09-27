@@ -67,9 +67,7 @@ export default {
         .title {
           color: @secondItemColor;
         }
-      }
-      &:nth-last-child(2) {
-        border-bottom: none;
+        border-bottom: 1px solid white;
       }
       &:last-child {
         // border-right: none;

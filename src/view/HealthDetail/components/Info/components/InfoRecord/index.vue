@@ -134,8 +134,9 @@ export default {
     async submitEditRecord () {
       const index = this.modalPreData.index
       const postData = {
-        ...this.modalPreData,
-        date: this.modalPreData.createTime
+        data: this.modalPreData.data,
+        recordId: this.modalPreData.id,
+        date: moment(this.modalPreData.createTime).format('YYYY-MM-DD HH:mm:ss')
       }
       delete postData.createTime
       delete postData.index
@@ -172,7 +173,6 @@ export default {
 .info-record-wrapper {
   margin: 0rem 2rem;
   padding-top: 1rem;
-  border-top: 1px solid @thirdColor;
   #tag {
     display: block;
     font-size: 1.2rem;

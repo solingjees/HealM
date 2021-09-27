@@ -1,3 +1,4 @@
+import store from '@/store'
 export default [
   {
     path: 'myHealth',
@@ -13,11 +14,15 @@ export default [
     path: 'healthDetail',
     name: 'healthDetail',
     redirect: { name: 'info' },
-    props: route => ({
-      healthItemId: route.query.healthItemId,
-      userId: route.query.userId,
-      initDate: route.query.initDate
-    }),
+    props: route => {
+      const _query = {
+        healthItemId: route.query.healthItemId,
+        userId: route.query.userId,
+        initDate: route.query.initDate
+      }
+      if (route.query.edit) _query.edit = parseInt(route.query.edit)
+      return _query
+    },
     meta: {
       title: '健康详情',
       hideInMenu: true
@@ -50,6 +55,11 @@ export default [
       icon: 'shield-cross.png',
       identity: [0]
     },
+    props: route => {
+      return {
+        initDate: route.query.initDate
+      }
+    },
     component: () => import('@/view/myPhysical')
   },
   {
@@ -60,16 +70,42 @@ export default [
       icon: 'nurse.png',
       identity: [0]
     },
-    component: () => import('@/view/diagnose'),
+    component: () => import('@/view/diagnose')
   },
   {
-    path: 'chat',
-    name: 'chat',
-    component: () => import('@/view/chat'),
+    path: 'search',
+    name: 'search',
     meta: {
-      title: '病情聊天',
+      title: '搜索科室',
+      identity: [0],
       hideInMenu: true
-    }
+    },
+    component: () => import('@/view/search')
+  },
+  {
+    path: 'searchResult',
+    name: 'searchResult',
+    meta: {
+      title: route => '搜索:' + route.query.department,
+      identity: [0],
+      hideInMenu: true
+    },
+    props: route => ({
+      department: route.query.department
+    }),
+    component: () => import('@/view/searchResult')
+  },
+  {
+    path: 'doctorDescription',
+    name: 'doctorDescription',
+    meta: {
+      title: '医生详情',
+      hideInMenu: true
+    },
+    props: route => ({
+      id: route.query.id
+    }),
+    component: () => import('@/view/doctorDescription')
   },
   {
     path: 'prescription',
@@ -82,9 +118,24 @@ export default [
     }
   },
   {
+    path: 'prescriptionDetail',
+    name: 'prescriptionDetail',
+    component: () => import('@/view/PrescriptionDetail'),
+    meta: {
+      title: '处方详情',
+      hideInMenu: true,
+      identity: [0]
+    },
+    props: route => ({
+      pid: route.query.pid,
+      did: route.query.did,
+      uid: store.state.user.id
+    })
+  },
+  {
     path: 'article',
     name: 'article',
-    redirect:{ name: 'list' },
+    redirect: { name: 'list' },
     component: () => import('@/view/article'),
     meta: {
       title: '文章推荐',
@@ -107,7 +158,7 @@ export default [
           title: '文章详情'
         },
         component: () => import('@/view/article/components/content')
-      },
+      }
     ]
   }
 ]

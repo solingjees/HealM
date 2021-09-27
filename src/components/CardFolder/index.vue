@@ -11,12 +11,14 @@
       :index="index"
       :card-height="cardHeight"
       :data="dataList[0]"
+      :is-show="showFirstCard"
       @on-click="handleClick"
     >
-      <template v-slot="{ index: innerIndex,data }">
+      <template v-slot="{ index: innerIndex,data,isShow }">
         <slot
           :index="innerIndex"
           :data="data"
+          :isShow="isShow"
         />
       </template>
     </CardFolderItem>
@@ -29,10 +31,11 @@
         top: showFirstCard? '16px': ( 50 - cardHeight) + 'px'
       }"
     >
-      <template v-slot="{ index: innerIndex,data }">
+      <template v-slot="{ index: innerIndex,data,isShow}">
         <slot
           :index="innerIndex"
           :data="data"
+          :isShow="isShow"
         />
       </template>
     </Card-Folder>

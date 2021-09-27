@@ -30,7 +30,7 @@ use([
 ])
 
 export default {
-  name: 'InfoDisplayTemplateArea',
+  name: 'InfoDisplayTemplateBlock',
   components: {
     'v-echarts': ECharts
   },
@@ -77,9 +77,11 @@ export default {
             return prev
           }, [])
         } else {
-          /**
-           * ! 这部分暂时没有需求进行使用，后续有业务时进行更改
-           */
+          // 数据由两个数据进行差值计算得出，没有单位说明是时间数据
+          return this.recordData.reduce(function (prev, cur, index, arr) {
+            prev.push([cur.createTime, cur.data[0]])
+            return prev
+          }, [])
         }
       })()
       return {

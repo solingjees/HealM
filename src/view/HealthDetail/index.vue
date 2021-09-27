@@ -54,9 +54,7 @@
 import HealthDetailHeader from './components/header'
 import InputItem from '@/components/inputItem'
 import { addHealthDetailData } from '@/api/user'
-import { getHealthDetailData } from '@/api/home'
 import moment from 'moment'
-import { parse } from 'qs'
 export default {
   name: 'HealthDetail',
   components: {
@@ -75,6 +73,10 @@ export default {
     initDate: {
       type: String,
       default: ''
+    },
+    edit: {
+      type: [String, Number],
+      default: 0
     }
   },
   data: () => ({
@@ -110,7 +112,7 @@ export default {
     } else {
       this.date = moment().format('YYYY-MM-DD')
     }
-    await this._getHealthDetailData(this.date)
+    await this._getHealthDetailData(this.date, this.edit)
     this.addDataTemplate.data = new Array(
       this.healthDetailData.itemData.newRecordName.length
     )
@@ -122,19 +124,16 @@ export default {
         healthItemId: parseInt(this.healthItemId)
       }
       postData.date = this.addDataTemplate.date
-      if (this.addDataTemplate.data instanceof Array) {
-        postData.data = this.addDataTemplate.data[0]
-      } else {
-        postData.data = this.addDataTemplate.data
-      }
+      // if (this.addDataTemplate.data instanceof Array) {
+      //   postData.data = this.addDataTemplate.data[0]
+      // } else {
+      postData.data = this.addDataTemplate.data
+      // }
       const res = await addHealthDetailData(postData)
       if (res.status) {
         this.showModal = false
-      }
-      if (this.date === moment(this.addDataTemplate.date).format('YYYY-MM-DD')) {
-        await this._getHealthDetailData(this.addDataTemplate.date)
-      } else {
         this.date = moment(this.addDataTemplate.date).format('YYYY-MM-DD')
+        await this._getHealthDetailData(this.addDataTemplate.date)
       }
     },
     add () {
@@ -147,14 +146,19 @@ export default {
         this.addDataTemplate[key][index] = value
       }
     },
-    async _getHealthDetailData (date) {
-      const res = await getHealthDetailData({
+    async _getHealthDetailData (date, showModal = 0) {
+      const res = await this.$axios.home.getHealthDetailData({
         healthItemIds: [parseInt(this.healthItemId)],
         date,
         userId: parseInt(this.userId)
       })
       if (res.status) {
-        this.healthDetailData = res.data[0].detailData
+        this.healthDetailData = (res.data)[0].detailData
+        if (showModal) {
+          this.showModal = true
+        }
+      } else {
+        this.healthDetailData = {}
       }
     },
     changeDate (date) {

@@ -6,42 +6,39 @@ import ViewUI from 'view-design'
 import config from '@/config'
 import VueMaterial from 'vue-material' // 引入material ui
 import Vuelidate from 'vuelidate'
-// import importDirective from '@/directive'
+import importDirective from '@/directive'
 // import { directive as clickOutside } from 'v-click-outside-x'
 import installPlugin from '@/plugin'
 import errorHandle from '_utils/errorHandle'
 import VueSocketIO from 'vue-socket.io'
 import Meta from 'vue-meta'
-
 import './index.less'
 import '@/assets/icons/iconfont.css'
 import 'vue-material/dist/vue-material.min.css'
 import 'vue-material/dist/theme/default.css'
 import '@vant/touch-emulator' // vant的桌面适配
-import { SwipeCell } from 'vant'
+import { SwipeCell, Notify } from 'vant'
 
-// import TreeTable from 'tree-table-vue'
-// import VOrgTree from 'v-org-tree'
-// import 'v-org-tree/dist/v-org-tree.css'
-/* eslint-disable */
-if (process.env.NODE_ENV !== 'production') require('@/mock')
+// if (process.env.NODE_ENV !== 'production') require('@/mock')
 
 ViewUI.LoadingBar.config({
-   color: '#54a5f3'
+  color: '#54a5f3'
 })
 
 Vue.use(ViewUI)
 Vue.use(VueMaterial)
 Vue.use(Vuelidate)
 Vue.use(SwipeCell)
+Vue.use(Notify)
 Vue.use(Meta)
 
 Vue.use(new VueSocketIO({
-  debug: false,
-  //连接目标的Socket
-  connection: 'http://localhost:9999',
-  options:{
-      autoConnect:false
+  debug: process.env.NODE_ENV !== 'production',
+  // 连接目标的Socket
+  connection: process.env.NODE_ENV !== 'production' ? config.socketUrl.dev : config.socketUrl.pro,
+  options: {
+    autoConnect: false
+    // transports: ['websocket']
   }
 }))
 // Vue.use(TreeTable)
@@ -55,6 +52,15 @@ installPlugin(Vue)
  */
 Vue.config.productionTip = false
 /**
+ * @description axios全局入口
+ */
+Vue.prototype.$axios = {
+  home: require('@/api/home'),
+  login: require('@/api/login'),
+  user: require('@/api/user'),
+  doctor: require('@/api/doctor')
+}
+/**
  * @description 全局注册应用配置
  */
 Vue.prototype.$config = config
@@ -65,7 +71,7 @@ Vue.prototype.$errorhandle = errorHandle
 /**
  * 注册指令
  */
-// importDirective(Vue)
+importDirective(Vue)
 // Vue.directive('clickOutside', clickOutside)
 
 /* eslint-disable no-new */

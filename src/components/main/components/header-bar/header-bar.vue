@@ -36,7 +36,11 @@ export default {
   }),
   computed: {
     title () {
-      return this.$route.meta.title || ''
+      if (this.$route.meta.title instanceof Function) {
+        return this.$route.meta.title(this.$route) || ''
+      } else {
+        return this.$route.meta.title || ''
+      }
     }
   },
   methods: {

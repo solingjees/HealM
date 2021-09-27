@@ -61,7 +61,7 @@
         <span
           v-else-if="!$v.form.verifyCode.minLength || !$v.form.verifyCode.maxLength"
           class="md-error"
-        >验证码为四位</span>
+        >验证码为六位</span>
       </div>
       <md-button
         class="md-raised md-primary submit-button"
@@ -110,8 +110,8 @@ export default {
       },
       verifyCode: {
         required,
-        minLength: minLength(4),
-	    	maxLength: maxLength(4)
+        minLength: minLength(6),
+        maxLength: maxLength(6)
       }
     }
   },
@@ -140,7 +140,7 @@ export default {
           const res2 = await this.handleGetInfo()
           if (res2.status) {
             this.$Message.success('用户登录成功')
-            if (this.identity === 0) {
+            if (res2.data.identity === 0) {
               // common user
               this.$router.push({
                 name: 'myHealth'

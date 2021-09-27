@@ -91,6 +91,7 @@ export default {
   padding: 0px 20px 0px 10px;
   border-bottom: 1px solid @thirdColor;
   position: relative;
+  background-color: white;
   .flex(row,space-between,center);
   .return {
     position: absolute;
