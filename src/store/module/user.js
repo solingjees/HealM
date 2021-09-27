@@ -2,6 +2,7 @@ import { getInfo, resetPassword, updateInfo } from '@/api/home'
 import { normalLogin } from '@/api/login'
 import { setToken, getToken } from '@/libs/util'
 import { UserInfoStorage } from '@/libs/localStorage'
+import store from '../index'
 
 export default {
   state: {
@@ -26,6 +27,28 @@ export default {
   mutations: {
     setHasGetInfo (state, hasGetInfo) {
       state.hasGetInfo = hasGetInfo
+    },
+    setUserInfo (state, userInfo) {
+      state.identity = userInfo.identity
+      state.id = userInfo.id
+      state.phoneNumber = userInfo.phoneNumber
+      state.name = userInfo.name
+      state.avatar = userInfo.avatar
+      state.gender = userInfo.gender
+
+      if (parseInt(userInfo.identity)) {
+        // 医生
+        state.hospital = userInfo.hospital
+        state.department = userInfo.department
+        state.position = userInfo.position
+        state.skill = userInfo.skill
+        state.introduction = userInfo.introduction
+      } else {
+        // 普通用户
+        state.birthday = userInfo.birthday
+        state.age = userInfo.age
+      }
+      state.hasGetInfo = true
     },
     setId (state, id) {
       state.id = id
@@ -77,7 +100,7 @@ export default {
   actions: {
     // 登录
     handleLogin ({ commit }, { phoneNumber, password }) {
-      return new Promise(async (resolve, reject) => {
+      return new Promise((resolve, reject) => {
         normalLogin({
           phoneNumber, password
         }).then(res => {
@@ -97,8 +120,7 @@ export default {
       return new Promise((resolve, reject) => {
         try {
           this.commit('setToken', '')
-          this.commit('setHasGetInfo', false)
-          this.commit('setIdentity', -1)
+          UserInfoStorage.clear()
           resolve(true)
         } catch {
           reject(false)
@@ -107,35 +129,26 @@ export default {
     },
     handleGetInfo ({ commit }) {
       return new Promise((resolve, reject) => {
-        getInfo().then(res => {
-          if (res.status) {
-            // 获取用户信息成功
-            const data = res.data
-            commit('setIdentity', data.identity)
-            commit('setId', data.id)
-            commit('setPhoneNumber', data.phoneNumber)
-            commit('setName', data.name)
-            commit('setAvatar', data.avatar)
-            commit('setGender', data.gender)
-            if (parseInt(data.identity)) {
-              // 医生
-              commit('setHospital', data.hospital)
-              commit('setDepartment', data.department)
-              commit('setPosition', data.position)
-              commit('setSkill', data.skill)
-              commit('setIntroduction', data.introduction)
-            } else {
-              // 普通用户
-              commit('setBirthday', data.birthday)
-              commit('setAge', data.age)
+        const store_userInfo = UserInfoStorage.getValue()
+        if (store_userInfo) {
+          // 本地有数据，从本地获取，并存储到store
+          commit('setUserInfo', store_userInfo)
+          resolve({
+            status: true,
+            data: store_userInfo
+          })
+        } else {
+          // 本地没有，从服务器获取，并存储到store中
+          getInfo().then(res => {
+            if (res.status) {
+              commit('setUserInfo', res.data)
+              UserInfoStorage.setValue(res.data)
+              resolve(res)
             }
-            commit('setHasGetInfo', true)
-            UserInfoStorage.setValue(data)
-          }
-          resolve(res)
-        }).catch(err => {
-          reject(err)
-        })
+          }).catch(err => {
+            reject(err)
+          })
+        }
       })
     },
     handleResetPassword ({ commit }, { newPassword }) {

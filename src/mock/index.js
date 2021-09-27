@@ -1,7 +1,7 @@
 import Mock from 'mockjs'
 import { normalLogin, sendPhoneVerify, checkPhoneVerify } from './login'
-import { getInfo, resetPassword, uploadFile, updateInfo, getHealthData, getHealthDetailData, getHealthStatisticsData } from './home'
-import { addHealthDetailData, updateHealthDetailData, deleteHealthDetailData } from './user'
+import { getInfo, resetPassword, uploadFile, updateInfo, getHealthData, getHealthDetailData, getHealthStatisticsData, getChatList } from './home'
+import { addHealthDetailData, updateHealthDetailData, deleteHealthDetailData, getPrescriptionList, searchDoctor } from './user'
 
 // 配置Ajax请求延时，可用来测试网络延迟大时项目中一些效果
 Mock.setup({
@@ -15,10 +15,10 @@ Mock.setup({
 // Mock.mock(/\/home\/getInfo/, getInfo)
 
 // 获取手机验证码
-Mock.mock(/\/login\/sendPhoneVerify/, sendPhoneVerify)
+// Mock.mock(/\/login\/sendPhoneVerify/, sendPhoneVerify)
 
 // 手机号验证码校验
-Mock.mock(/\/login\/checkPhoneVerify/, checkPhoneVerify)
+// Mock.mock(/\/login\/checkPhoneVerify/, checkPhoneVerify)
 
 // 更新密码
 Mock.mock(/\/home\/resetPassword/, resetPassword)
@@ -44,7 +44,16 @@ Mock.mock(/\/user\/updateHealthDetailData/, updateHealthDetailData)
 // 删除用户健康记录
 Mock.mock(/\/user\/deleteHealthDetailData/, deleteHealthDetailData)
 
+// 获取用户的处方列表
+// Mock.mock(/\/user\/getPrescriptionList/, getPrescriptionList)
+
 // 获取用户健康统计
 Mock.mock(/\/home\/getHealthStatisticsData/, getHealthStatisticsData)
+
+// 获取聊天列表
+// Mock.mock(/\/home\/getChatList/, getChatList)
+
+// 获取医生列表
+// Mock.mock(/\/user\/searchDoctor/, searchDoctor)
 
 export default Mock

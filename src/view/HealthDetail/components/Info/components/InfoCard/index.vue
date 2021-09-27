@@ -102,10 +102,15 @@ export default {
   width: 100%;
   .transformDate {
     position: relative;
-    left: 0.5rem;
     padding-top: 1.875rem;
     .datePicker-template {
       .flex(row,center,center);
+      padding: .2rem 1rem;
+      border:none;
+      width: 100%;
+      box-shadow: @boxShadow;
+      background-color:white;
+      border-radius: 1rem;
       img {
         width: 1.875rem;
         height: 1.875rem;

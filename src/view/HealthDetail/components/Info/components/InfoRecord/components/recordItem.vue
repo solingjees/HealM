@@ -5,7 +5,7 @@
       highlight: isHighlight,
     }"
   >
-    <van-swipe-cell>
+    <van-swipe-cell :disabled="disabled">
       <template #right>
         <van-button
           square
@@ -86,6 +86,10 @@ export default {
       type: Boolean,
       default: false
     },
+    timeFormat: {
+      type: String,
+      default: ''
+    },
     unit: {
       type: String,
       default: ''
@@ -97,10 +101,15 @@ export default {
     type: {
       type: String,
       default: ''
+    },
+    disabled: {
+      type: Boolean,
+      default: false
     }
   },
   computed: {
     time () {
+      if (this.timeFormat !== '') return moment(this.data.createTime).format(this.timeFormat)
       const _format = this.isTodayRecord ? 'hh:mm' : 'YYYY-MM-DD hh:mm'
       return moment(this.data.createTime).format(_format)
     }

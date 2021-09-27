@@ -13,7 +13,10 @@
         >
       </div>
     </div>
-    <div class="line3">
+    <div
+      class="line3"
+      @click="goToPhoneLogin"
+    >
       没有账号?立即注册
     </div>
   </div>
@@ -25,7 +28,14 @@ export default {
   name: 'ThirdLogin',
   data: () => ({
     qqIcon: QQIcon
-  })
+  }),
+  methods: {
+    goToPhoneLogin () {
+      this.$router.push({
+        name: 'phoneLogin'
+      })
+    }
+  }
 }
 </script>
 

@@ -1,25 +1,27 @@
 <template>
-  <div class="advice">
-    <div class="advice-item">
-      <div class="left">
-        可能状态
+  <div class="advice-container">
+    <div class="advice">
+      <div class="advice-item">
+        <div class="left">
+          可能状态
+        </div>
+        <div
+          class="right"
+          :class="{
+            red: adviceColor === 'red',
+            green: adviceColor === 'green',
+          }"
+        >
+          {{ possibleState || '无' }}
+        </div>
       </div>
-      <div
-        class="right"
-        :class="{
-          red: adviceColor === 'red',
-          green: adviceColor === 'green',
-        }"
-      >
-        {{ possibleState || '无' }}
-      </div>
-    </div>
-    <div class="advice-item">
-      <div class="left">
-        建议
-      </div>
-      <div class="right">
-        {{ advice || '无' }}
+      <div class="advice-item">
+        <div class="left">
+          建议
+        </div>
+        <div class="right">
+          {{ advice || '无' }}
+        </div>
       </div>
     </div>
   </div>
@@ -47,14 +49,23 @@ export default {
 
 <style lang="less" scoped>
 @import '~/src/index.less';
-.advice {
-  width: 100%;
+.advice-container{
+  margin-top: 1rem;
   box-sizing: border-box;
-  padding: 2rem;
+  width: 100%;
+  padding-top: 2rem;
+  padding: 0rem 2rem;
+}
+
+.advice {
+  padding: 0.5rem 1rem;
+  background-color: white;
+  box-shadow:@boxShadow;
+  border-radius: 1rem;
   .flex(column,center,center);
   .advice-item {
-    margin-bottom: 0.5rem;
     width: 100%;
+    margin: .1rem 0rem;
     .flex(row,flex-start,flex-start);
     .left {
       width: 6rem;

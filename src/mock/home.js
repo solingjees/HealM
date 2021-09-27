@@ -1,4 +1,4 @@
-// import Mock from 'mockjs'
+import { Random } from 'mockjs'
 
 export const getInfo = req => {
   // const body = JSON.parse(req.body)
@@ -572,5 +572,33 @@ export const getHealthStatisticsData = req => {
         }
       ]
     }
+  }
+}
+
+export const getChatList = req => {
+  const num1 = parseInt(Math.random() * 20 + 1)
+  const num2 = parseInt(Math.random() * 20 + 1)
+  const data = {}
+  const generateChatList = (num) => {
+    const returnData = []
+    for (let i = 0; i < num; i++) {
+      returnData.push({
+        id: Random.integer(0, 30),
+        userOrDoctorId: Random.integer(0, 100000),
+        name: Random.cname(),
+        avatar: 'https://i.loli.net/2017/08/21/599a521472424.jpg',
+        possibleDisease: Random.ctitle(2, 10),
+        notReadNum: Random.integer(0, 5),
+        chat: Random.cparagraph()
+      })
+    }
+    return returnData
+  }
+  data.isAssign = generateChatList(num1)
+  data.notAssign = generateChatList(num2)
+  return {
+    status: true,
+    script: '获取聊天列表成功',
+    data
   }
 }

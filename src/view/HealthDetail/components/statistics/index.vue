@@ -87,8 +87,8 @@ export default {
     // 获取
     async _getHealthStatisticsData () {
       const res = await getHealthStatisticsData({
-        userId: this.userId,
-        healthItemId: this.healthItemId
+        userId: parseInt(this.userId),
+        healthItemId: parseInt(this.healthItemId)
       })
       if (res.status) {
         const data = res.data

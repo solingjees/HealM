@@ -1,6 +1,9 @@
 <template>
   <div class="input-item-wrapper">
-    <div class="title">
+    <div
+      v-if="title!== ''"
+      class="title"
+    >
       {{ title }}
     </div>
     <div class="input-area">
@@ -8,6 +11,7 @@
         v-if="type === 'line'"
         class="content"
         :value="value"
+        :disabled="disabled"
         :placeholder="'输入您的' + title"
         @on-change="changeValue"
       />
@@ -15,6 +19,7 @@
         v-if="type === 'date' || type === 'time'"
         class="content"
         type="date"
+        :disabled="disabled"
         :value="value + ''"
         format="yyyy-MM-dd"
         placeholder="请选择日期"
@@ -24,6 +29,7 @@
         v-if="type === 'time'"
         class="content time"
         format="HH:mm"
+        :disabled="disabled"
         :value="time + ''"
         placeholder="请选择时间"
         @on-change="changeTime"
@@ -31,6 +37,7 @@
       <Select
         v-if="type === 'select'"
         class="content"
+        :disabled="disabled"
         :value="'' + value"
         @on-change="changeSelect"
       >
@@ -54,9 +61,10 @@
         class="content"
         :value="value"
         maxlength="250"
+        :disabled="disabled"
         show-word-limit
         type="textarea"
-        :placeholder="'请输入' + title"
+        :placeholder="placeHolder === ''? '请输入' + title : placeHolder"
         @on-change="changeValue"
       />
       <div class="append">
@@ -67,6 +75,7 @@
 </template>
 
 <script>
+import moment from 'moment'
 import upload from './components/upload'
 export default {
   name: 'InputItem',
@@ -84,7 +93,11 @@ export default {
     },
     type: {
       type: String,
-      default: 'line' // line,textarea,date,age,time
+      default: 'line' // line,textarea,date,age,time,select
+    },
+    disabled: {
+      type: Boolean,
+      default: false
     },
     range: {
       type: Array,
@@ -92,6 +105,10 @@ export default {
     },
     // 时间值
     time: {
+      type: String,
+      default: ''
+    },
+    placeHolder: {
       type: String,
       default: ''
     },
@@ -126,7 +143,7 @@ export default {
     },
     changeTime (time) {
       this._time = time
-      this.$emit('on-change-value', (this._date || '') + ' ' + time)
+      this.$emit('on-change-value', (this._date || '') + ' ' + time + ':00')
     },
     changeSelect (value) {
       this.$emit('on-change-value', value)

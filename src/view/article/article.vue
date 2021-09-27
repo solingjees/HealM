@@ -1,12 +1,12 @@
 <template>
-  <router-view></router-view>
+  <router-view />
 </template>
 <script>
 export default {
-  name:'article',
-  metaInfo:{
-    meta:[
-      {name:'referrer',content:'never'}
+  name: 'Article',
+  metaInfo: {
+    meta: [
+      { name: 'referrer', content: 'never' }
     ]
   }
 }

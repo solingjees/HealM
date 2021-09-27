@@ -9,6 +9,7 @@
   >
     <slot
       :index="index"
+      :isShow="isShow"
       :data="data"
     />
   </div>
@@ -30,6 +31,10 @@ export default {
     'card-height': {
       type: Number,
       default: 160
+    },
+    isShow: {
+      type: Boolean,
+      default: false
     }
   },
   methods: {

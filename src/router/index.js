@@ -15,17 +15,19 @@ const router = new Router({
 })
 
 const turnTo = (to, identity, next) => {
-  if (canTurnTo(to.name, identity, routes)) next() // 有权限，可访问
+  if (canTurnTo(to.name, identity, routes)) {
+    next()
+  } // 有权限，可访问
   else next({ replace: true, name: 'login' }) // 无权限，没有权限，跳转到登录页面
 }
 
 router.beforeEach((to, from, next) => {
   iView.LoadingBar.start()
-  const token = getToken()
   if (config.openRouters.includes(to.name)) {
     next()
     return
   }
+  const token = getToken()
   if (!token || token === '') {
     // token不存在，让用户去登录
     next({

@@ -1,4 +1,4 @@
-import HealthItemConfig from './healthItem'
+import departments from './Departments'
 export default {
   /**
    * @description 配置显示在浏览器标签的title
@@ -18,8 +18,15 @@ export default {
    * @description api请求基础路径
    */
   baseUrl: {
-    dev: 'http://localhost:8081', // 'http://localhost:3000',
-    pro: 'http://www.vaccum.ltd:8080'
+    dev: 'http://www.vaccum.ltd:8081', // 'http://localhost:3000',
+    pro: 'http://www.vaccum.ltd:8081'
+  },
+  /**
+   * @description socket请求路径
+   */
+  socketUrl: {
+    dev: 'http://www.vaccum.ltd:10001',
+    pro: 'http://www.vaccum.ltd:10001'
   },
   /**
    * @description 默认打开的首页的路由name值，默认为home
@@ -51,11 +58,19 @@ export default {
    */
   uploadImageUrl: '/api/home/uploadFile',
   /**
-   * @description
+   * @description 文件路径头部
    */
   imageHeader: 'http://www.vaccum.ltd',
   /**
-   *  @description  写死的健康信息（未来删除）
+   * @description 所有科室
    */
-  healthItemConfig: HealthItemConfig
+  departments,
+  /**
+   * @description 不需要版权信息组件显示的页面
+   */
+  noCopyRightComponentsRouterList: ['about', 'chat-patient', 'chat-doctor'],
+  /**
+   * @description 签约时间存活时间
+   */
+  contractActiveTime: 60000
 }
