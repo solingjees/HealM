@@ -1,31 +1,35 @@
 <template>
-    <div class="articleContent">
-      <div v-for="(value,index) in articleList" :key="index" class="articlePart">
-          <router-link :to="{name:'content',query:{'article':value}}">
-            <img :src="value.pic">
-            <div class="titlePart">
-                <p>{{value.title}}</p>
-            </div>
-          </router-link>
-      </div>
-    </div>    
+  <div class="articleContent">
+    <!-- <div
+      v-for="(value,index) in articleList"
+      :key="index"
+      class="articlePart"
+    >
+      <router-link :to="{name:'content',query:{'article':value}}">
+        <img :src="value.pic">
+        <div class="titlePart">
+          <p>{{ value.title }}</p>
+        </div>
+      </router-link>
+    </div> -->
+  </div>
 </template>
 <script>
 import axios from 'axios'
-import articles from '@/assets/article'
+// import articles from '@/assets/article'
 export default {
-    name:'list',
-    data(){
-        return {
-            articleList:articles,
-        }
-    },
-    mounted(){
-        console.log(this.articleList)
-        // axios.get('https://api.jisuapi.com/weixinarticle/get?channelid=14&start=10&num=100&appkey=010f0a7550b1cc73').then((res)=>{
-        //   console.log(res)
-        // })
+  name: 'List',
+  data () {
+    return {
+    //   articleList: articles
     }
+  },
+  mounted () {
+    console.log(this.articleList)
+    // axios.get('https://api.jisuapi.com/weixinarticle/get?channelid=14&start=10&num=100&appkey=010f0a7550b1cc73').then((res)=>{
+    //   console.log(res)
+    // })
+  }
 }
 </script>
 <style lang="less" scoped>
