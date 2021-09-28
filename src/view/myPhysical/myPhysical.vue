@@ -31,7 +31,7 @@
                 <Button
                   type="error"
                   ghost
-                  @click="handleOpenDeletePicture(innerIndex)"
+                  @click.stop="handleOpenDeletePicture(innerIndex)"
                 >
                   删除
                 </Button>
@@ -54,18 +54,6 @@
         添加新体检数据...
       </div>
     </div>
-
-    <!-- <Modal
-      v-model="needUpload"
-      :title="'上传报告单'"
-      :loading="true"
-      @on-ok="submit"
-    >
-      <input-item
-        type="image"
-        @on-change-value="hasUploadFile(value)"
-      />
-    </Modal> -->
     <UpdatePhysicalModal
       v-model="isShowUpdatePhysicalModal"
       @add="handleAddPicture"
@@ -124,13 +112,15 @@ export default {
       this.confirmDeleteIndex = index
       this.isShowConfirmDeleteModal = true
     },
-    handleDeletePicture () {
+    async handleDeletePicture () {
       this.cardFolderKey++
       this.imageList.splice(this.confirmDeleteIndex, 1)
+      await this._updatePhysicalData()
     },
-    handleAddPicture (newPicture) {
+    async handleAddPicture (newPicture) {
       this.cardFolderKey++
       this.imageList.push(newPicture)
+      await this._updatePhysicalData()
     },
     handleChangeDate (date) {
       this.date = date
@@ -149,39 +139,26 @@ export default {
         if (Object.keys(res.data).length > 0) {
           this.imageList = res.data.picture
           this.physicalId = res.data.id
+        } else {
+          this.imageList = []
+          this.physicalId = -1
         }
       }
+    },
+    async _updatePhysicalData () {
+      const _data = {
+        date: this.date,
+        physicalId: this.physicalId,
+        picture: this.imageList
+      }
+      if (this.physicalId === -1) delete _data.physicalId
+      const res = await this.$axios.user.updatePhysicalData(_data)
+      if (res.status) {
+        this.$Message.success(res.script)
+      } else {
+        this.$Message.error(res.script)
+      }
     }
-    // async deletePhysicalImage (index) {
-    //   this.imageList.splice(index, 1)
-    //   const res = await updatePhysicalData({
-    //     date: require('moment')(this.date).format('YYYY-MM-DD'),
-    //     physicalId: this.physicalId,
-    //     picture: this.imageList
-    //   })
-    //   if (res.status) {
-    //     this.$Message.success('删除成功')
-    //   }
-    // },
-    // changeUploadState () {
-    //   this.needUpload = true
-    // },
-    // hasUploadFile (value) {
-    //   this.imageList.push(value)
-    // },
-    // async submit () {
-    //   if (this.imageList != undefined && this.imageList.length != 0) {
-    //     this.imageList.splice(index, 1)
-    //     const res = await updatePhysicalData({
-    //       date: require('moment')(this.date).format('YYYY-MM-DD'),
-    //       picture: this.imageList
-    //     })
-    //     if (res.status) {
-    //       this.$Message.success('上传成功')
-    //       this.date = new Date()
-    //     }
-    //   } else { this.needUpload = false }
-    // }
   }
 }
 </script>

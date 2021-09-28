@@ -20,7 +20,7 @@
         class="content"
         type="date"
         :disabled="disabled"
-        :value="value + ''"
+        :value="newDate + ''"
         format="yyyy-MM-dd"
         placeholder="请选择日期"
         @on-change="changeDate"
@@ -30,7 +30,7 @@
         class="content time"
         format="HH:mm"
         :disabled="disabled"
-        :value="time + ''"
+        :value="newTime + ''"
         placeholder="请选择时间"
         @on-change="changeTime"
       />
@@ -117,10 +117,12 @@ export default {
       default: 1
     }
   },
-  data: () => ({
-    _time: '',
-    _date: ''
-  }),
+  data () {
+    return {
+      newTime: '',
+      newDate: ''
+    }
+  },
   computed: {
     uploadImageUrl () {
       const baseUrl =
@@ -133,17 +135,35 @@ export default {
       return this.$store.state.user.token
     }
   },
+  watch: {
+    time (newval, oldval) {
+      if (this.type !== 'time') return ''
+      if (newval !== oldval) {
+        this.newTime = moment(newval.trim()).format('HH:mm')
+      }
+    },
+    value (newval, oldval) {
+      if (this.type !== 'time' || this.type !== 'date') return ''
+      if (newval !== oldval) {
+        this.newDate = moment(newval.trim()).format('YYYY-MM-DD')
+      }
+    }
+  },
   methods: {
     changeValue (e) {
       this.$emit('on-change-value', e.target.value)
     },
     changeDate (date) {
-      this._date = date
-      this.$emit('on-change-value', date + ' ' + (this._time || ''))
+      this.newDate = date
+      if (this.type === 'time') {
+        this.$emit('on-change-value', date + ' ' + (this.newTime || ''))
+      } else {
+        this.$emit('on-change-value', date)
+      }
     },
     changeTime (time) {
-      this._time = time
-      this.$emit('on-change-value', (this._date || '') + ' ' + time + ':00')
+      this.newTime = time
+      this.$emit('on-change-value', (this.newDate || '') + ' ' + time + ':00')
     },
     changeSelect (value) {
       this.$emit('on-change-value', value)

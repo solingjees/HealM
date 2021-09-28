@@ -1,6 +1,7 @@
 <template>
   <div class="function-container">
     <TagGroup
+      :key="key"
       :tag-list="tagList"
       :message-list="messageList"
       :initial-time-delay-list="initialTimeDelayList"
@@ -61,6 +62,7 @@ export default {
   },
   data () {
     return {
+      key: 0,
       isOpenSendHealthItemModal: false,
       isOpenSendPhysicalModal: false,
       isOpenCompleteContractModal: false,
@@ -113,6 +115,13 @@ export default {
         }]
       }
       return _tagList
+    }
+  },
+  watch: {
+    isAssigned (newval, oldval) {
+      if (newval !== oldval) {
+        this.key++
+      }
     }
   },
   methods: {

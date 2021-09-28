@@ -56,7 +56,7 @@ export default {
     background-color: white;
     border: none;
     box-shadow: @boxShadow;
-    border-radius: .3rem;
+    // border-radius: .3rem;
     #title{
         font-size: 1.2rem;
         color:@titleColor;

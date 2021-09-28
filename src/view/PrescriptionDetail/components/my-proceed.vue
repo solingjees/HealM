@@ -14,12 +14,28 @@
         </div>
         <div>{{ require('moment')(stageItem.createTime).format('YYYY-MM-DD HH:mm:ss') }}</div>
       </div>
-      <p>{{ stageItem.content }} </p>
+      <p class="content">
+        {{ stageItem.content+'这是一段文字哈哈哈哈哈哈哈哈哈' }}
+      </p>
+      <div class="badge">
+        <img
+          v-if="!stageItem.deleteTime"
+          :src="RunningIcon"
+          alt="running"
+        >
+        <img
+          v-else
+          :src="FinishedIcon"
+          alt="finished"
+        >
+      </div>
     </Card>
   </div>
 </template>
 
 <script>
+import FinishedIcon from '_icon/finished.png'
+import RunningIcon from '_icon/running.png'
 export default {
   name: 'PrescriptionDetailProceed',
   props: {
@@ -27,7 +43,10 @@ export default {
       type: Array,
       default: () => ([])
     }
-  }
+  },
+  data: () => ({
+    FinishedIcon, RunningIcon
+  })
 }
 </script>
 
@@ -46,9 +65,23 @@ export default {
             font-weight: bold;
           }
         }
+        .content{
+          min-height: 5rem;
+          padding-right: 2rem;
+        }
+
     }
     .ivu-card-body{
+      position: relative;
       padding: .5rem 1rem;
+      .badge{
+          position: absolute;
+          right: -1rem;
+          top: 0rem;
+          img{
+            width: 6rem;
+          }
+      }
     }
     .ivu-card-head{
       padding: .5rem 1rem;

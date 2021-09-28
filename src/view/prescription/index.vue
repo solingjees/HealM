@@ -1,11 +1,11 @@
 <template>
   <div class="prescription-wrapper">
-    <div
+    <!-- <div
       v-if="haveUnpostHealthItem"
       class="tips"
     >
       <span>提醒:</span>今日有相关健康数据未填写。
-    </div>
+    </div> -->
     <PrescriptionClass
       v-if="runningPrescriptionList.length > 0"
       title="进行中"
@@ -15,6 +15,7 @@
     <PrescriptionClass
       v-if="finishedPrescriptionList.length > 0"
       title="已完成"
+      :is-end="true"
       title-color="#2C8CF0"
       :prescription-list="finishedPrescriptionList"
     ></PrescriptionClass>
@@ -22,6 +23,7 @@
       v-if="cancelledPrescriptionList.length > 0"
       title="已取消"
       title-color="#D9001B"
+      :is-end="true"
       :prescription-list="cancelledPrescriptionList"
     ></PrescriptionClass>
     <div

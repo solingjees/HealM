@@ -10,7 +10,7 @@
     </div>
     <div class="item">
       <div class="left">
-        <Badge :color="badgeColor" />疑似病症
+        <Badge :color="badgeColor" />网诊
       </div>
       <div class="right">
         {{ data.possibleDisease }}
@@ -26,7 +26,7 @@
     </div>
     <div class="item">
       <div class="left">
-        <Badge :color="badgeColor" />待上传健康项
+        <Badge :color="badgeColor" />要求健康项
       </div>
       <div class="right">
         {{ data.notUploadHealthItem.length > 0? data.notUploadHealthItem.join(',') : '无' }}
