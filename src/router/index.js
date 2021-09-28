@@ -14,11 +14,15 @@ const router = new Router({
   linkExactActiveClass: 'emphisis'
 })
 
-const turnTo = (to, identity, next) => {
+const turnTo = (to, from, identity, next) => {
   if (canTurnTo(to.name, identity, routes)) {
     next()
   } // 有权限，可访问
-  else next({ replace: true, name: 'login' }) // 无权限，没有权限，跳转到登录页面
+  else {
+    iView.Message.error('您没有该页面的权限')
+    iView.LoadingBar.finish()
+    next({ replace: true, name: from.name || 'login' }) // 无权限，没有权限，跳转到登录页面
+  }
 }
 
 router.beforeEach((to, from, next) => {
@@ -37,16 +41,16 @@ router.beforeEach((to, from, next) => {
     // 用户已经登录了
     if (store.state.user.hasGetInfo) {
       // 用户已经获取了自己的信息
-      turnTo(to, store.state.user.identity, next)
+      turnTo(to, from, store.state.user.identity, next)
     } else {
       // 没有获取到用户信息
       store.dispatch('handleGetInfo').then(res => {
-        turnTo(to, res.data.identity, next)
+        turnTo(to, from, res.data.identity, next)
       }).catch(() => {
         // 出现问题就设置用户没有登录
-        setToken('')
+        iView.Message.info('您没有权限')
         next({
-          name: 'login'
+          name: from.name || 'login'
         })
       })
     }

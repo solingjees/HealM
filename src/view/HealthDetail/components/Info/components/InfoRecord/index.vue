@@ -34,6 +34,10 @@
         :title="item"
         :type="inputType"
         :upload-limit="3"
+        :time="modalPreData.data ?
+          ( healthDetailData.itemData.dataType !== 2? //该项目是否是图片数据
+            modalPreData.data[index] :'' )
+          : ''"
         :value="modalPreData.data ?
           ( healthDetailData.itemData.dataType !== 2? //该项目是否是图片数据
             modalPreData.data[index] : modalPreData.data )
@@ -161,6 +165,10 @@ export default {
       if (!(this.modalPreData[key] instanceof Array)) {
         this.modalPreData[key] = value
       } else {
+        if (this.inputType === 'image') {
+          this.modalPreData[key] = value
+          return
+        }
         this.modalPreData[key][index] = value
       }
     }

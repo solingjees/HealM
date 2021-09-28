@@ -20,7 +20,7 @@
       v-if="healthDetailData && healthDetailData.itemData"
       v-model="showModal"
       :title="'添加' + healthDetailData.itemData.name || ''"
-      :loading="true"
+      :loading="loading"
       @on-ok="submit"
     >
       <input-item
@@ -81,6 +81,7 @@ export default {
   },
   data: () => ({
     showModal: false,
+    loading: true,
     addDataTemplate: {
       date: '',
       data: []
@@ -134,15 +135,26 @@ export default {
         this.showModal = false
         this.date = moment(this.addDataTemplate.date).format('YYYY-MM-DD')
         await this._getHealthDetailData(this.addDataTemplate.date)
+      } else {
+        this.$Message.error(res.script)
+        this.loading = false
+        setTimeout(() => {
+          this.loading = true
+        }, 500)
       }
     },
     add () {
       this.showModal = true
     },
     changeValue (key, value, index) {
+      console.log(key, value)
       if (!(this.addDataTemplate[key] instanceof Array)) {
         this.addDataTemplate[key] = value
       } else {
+        if (this.inputType === 'image') {
+          this.addDataTemplate[key] = value
+          return
+        }
         this.addDataTemplate[key][index] = value
       }
     },

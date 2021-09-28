@@ -5,14 +5,16 @@
       :title="prescriptionDetailData.title"
       :create-time="prescriptionDetailData.createTime"
     ></prescription-detail-header>
-    <prescription-detail-tags
-      v-if="Object.keys(prescriptionDetailData).length > 0"
-      :list="tagList"
-    ></prescription-detail-tags>
-    <prescription-detail-proceed
-      v-if="Object.keys(prescriptionDetailData).length > 0"
-      :list="prescriptionDetailData.stage"
-    ></prescription-detail-proceed>
+    <div class="body">
+      <prescription-detail-tags
+        v-if="Object.keys(prescriptionDetailData).length > 0"
+        :list="tagList"
+      ></prescription-detail-tags>
+      <prescription-detail-proceed
+        v-if="Object.keys(prescriptionDetailData).length > 0"
+        :list="prescriptionDetailData.stage"
+      ></prescription-detail-proceed>
+    </div>
   </div>
 </template>
 
@@ -112,6 +114,10 @@ export default {
 .prescription-detail-container{
   width: 100%;
   box-sizing: border-box;
-  padding: 1rem;
+  .body{
+    padding: .5rem 1rem;
+    box-sizing: border-box;
+    width: 100%;
+  }
 }
 </style>

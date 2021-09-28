@@ -33,6 +33,7 @@
       :date="date"
     />
     <advice
+      v-if="healthDetailData.possibleState"
       :advice-color="healthDetailData.adviceColor"
       :possible-state="healthDetailData.possibleState"
       :advice="healthDetailData.advice"

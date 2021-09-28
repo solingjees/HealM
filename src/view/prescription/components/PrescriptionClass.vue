@@ -27,11 +27,11 @@
       >
         <div class="header">
           <div class="left">
-            <Badge
+            <!-- <Badge
               v-if="prescriptionItem.state ===1 && prescriptionItem.notUploadHealthItem.length > 0"
               class="badge"
               text="数据不完整"
-            />
+            /> -->
             <div class="title">
               {{ prescriptionItem.title }}
             </div>
@@ -50,6 +50,7 @@
             {{ prescriptionItem.possibleDisease }}
           </div>
           <img
+            v-if="!isEnd"
             :src="rightArrow"
             alt="go"
             @click="goToPrescriptionDetail(prescriptionItem.id,prescriptionItem.doctorId)"
@@ -89,6 +90,10 @@ export default {
     titleColor: {
       type: String,
       default: '#aaa'
+    },
+    isEnd: {
+      type: Boolean,
+      default: false
     }
   },
   data: () => ({
@@ -175,6 +180,7 @@ export default {
             flex: 1;
             text-align: right;
             padding-left: 1rem;
+            padding-right: .5rem;
             &.disease{
               &.running{
                 color:rgb(227,130,74);
