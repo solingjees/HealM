@@ -1,18 +1,12 @@
 <template>
   <Modal
     :value="isShow"
-    title="添加新体检数据"
+    title="删除体检数据"
     :loading="loading"
     @on-ok="ok"
     @on-cancel="cancel"
   >
-    <input-item
-      :upload-limit="1"
-      :type="'image'"
-      :value="[]"
-      @on-change-value="changePicture"
-    >
-    </input-item>
+    您确定删除第{{ index }}
   </Modal>
 </template>
 
@@ -31,6 +25,10 @@ export default {
     isShow: {
       type: Boolean,
       default: false
+    },
+    index: {
+      type: Number,
+      default: -1
     }
   },
   data: () => ({

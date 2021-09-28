@@ -110,7 +110,7 @@ export default {
   computed: {
     time () {
       if (this.timeFormat !== '') return moment(this.data.createTime).format(this.timeFormat)
-      const _format = this.isTodayRecord ? 'hh:mm' : 'YYYY-MM-DD hh:mm'
+      const _format = this.isTodayRecord ? 'HH:mm' : 'YYYY-MM-DD HH:mm'
       return moment(this.data.createTime).format(_format)
     }
   },

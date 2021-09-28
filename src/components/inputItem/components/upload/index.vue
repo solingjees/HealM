@@ -115,6 +115,11 @@ export default {
         return fileListItem.url === file.url
       })
       this.$refs.upload.fileList.splice(index, 1)
+      if (this.limit === 1) {
+        this.$emit('on-change-image', '')
+      } else {
+        this.$emit('on-change-image', this.$refs.upload.fileList)
+      }
     },
     handleSuccess (res, file) {
       if (res.status) {

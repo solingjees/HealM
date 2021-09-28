@@ -99,7 +99,7 @@ export default {
   },
   actions: {
     // 登录
-    handleLogin ({ commit }, { phoneNumber, password }) {
+    handleLogin ({ commit, dispatch }, { phoneNumber, password }) {
       return new Promise((resolve, reject) => {
         normalLogin({
           phoneNumber, password
@@ -108,6 +108,7 @@ export default {
             // 登录成功
             const data = res.data
             commit('setToken', data.token)
+            dispatch('handleGetInfo')
           }
           resolve(res)
         }).catch(err => {
