@@ -6,10 +6,11 @@
       @on-change="handleChangeDate"
     ></Header>
     <div
-      v-if="imageList.length > 0"
       class="body"
     >
       <CardFolder
+        v-if="imageList.length > 0"
+        :key="cardFolderKey"
         class="card-folder"
         :card-height="300"
         :data-list="imageList"
@@ -29,6 +30,8 @@
               >
                 <Button
                   type="error"
+                  ghost
+                  @click="handleOpenDeletePicture(innerIndex)"
                 >
                   删除
                 </Button>
@@ -63,27 +66,31 @@
         @on-change-value="hasUploadFile(value)"
       />
     </Modal> -->
-    <!-- <UpdatePhysicalModal v-model="isShowUpdatePhysicalModal" /> -->
+    <UpdatePhysicalModal
+      v-model="isShowUpdatePhysicalModal"
+      @add="handleAddPicture"
+    />
+    <ConfirmDeleteModal
+      v-model="isShowConfirmDeleteModal"
+      :index="confirmDeleteIndex"
+      @delete="handleDeletePicture"
+    />
   </div>
 </template>
 
 <script>
+import ConfirmDeleteModal from './components/ConfirmDeleteModal'
 import UpdatePhysicalModal from './components/UpdatePhysicalModal'
 import moment from 'moment'
 import Header from './components/Header.vue'
 import CardFolder from '@/components/CardFolder'
-import { SwipeCell, Button, Cell } from 'vant'
-import InputItem from '@/components/inputItem'
 export default {
   name: 'MyPhysical',
   components: {
-    'van-swipe-cell': SwipeCell,
-    'van-button': Button,
-    'van-cell': Cell,
-    'input-item': InputItem,
     Header,
     CardFolder,
-    UpdatePhysicalModal
+    UpdatePhysicalModal,
+    ConfirmDeleteModal
   },
   props: {
     initDate: {
@@ -95,7 +102,10 @@ export default {
     date: moment().format('YYYY-MM-DD'),
     imageList: [],
     physicalId: -1,
-    isShowUpdatePhysicalModal: false
+    cardFolderKey: 0,
+    isShowUpdatePhysicalModal: false,
+    isShowConfirmDeleteModal: false,
+    confirmDeleteIndex: -1
   }),
   watch: {
     date (newval, oldval) {
@@ -110,6 +120,18 @@ export default {
     }
   },
   methods: {
+    handleOpenDeletePicture (index) {
+      this.confirmDeleteIndex = index
+      this.isShowConfirmDeleteModal = true
+    },
+    handleDeletePicture () {
+      this.cardFolderKey++
+      this.imageList.splice(this.confirmDeleteIndex, 1)
+    },
+    handleAddPicture (newPicture) {
+      this.cardFolderKey++
+      this.imageList.push(newPicture)
+    },
     handleChangeDate (date) {
       this.date = date
     },
@@ -174,7 +196,7 @@ export default {
     box-sizing: border-box;
     padding: 1rem;
     .card-folder{
-
+        transition: all .2s;
     }
     .add{
         width: 100%;
@@ -183,15 +205,29 @@ export default {
     }
   }
 }
+
 .container{
-  .title{
-    .flex(row,space-between,center);
-    .left{
+    .title{
+      .flex(row,space-between,center);
+      .left{
 
-    }
-    .right{
+      }
+      .right{
 
+      }
     }
-  }
+    .body{
+      width: 100%;
+      padding: 0rem;
+      height: fit-content;
+      img{
+        width: 100%;
+      }
+    }
+    hr{
+      background-color: @thirdColor;
+      border:none;
+      height: 1px;
+    }
 }
 </style>
