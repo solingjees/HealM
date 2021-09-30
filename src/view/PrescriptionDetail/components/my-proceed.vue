@@ -15,7 +15,7 @@
         <div>{{ require('moment')(stageItem.createTime).format('YYYY-MM-DD HH:mm:ss') }}</div>
       </div>
       <p class="content">
-        {{ stageItem.content+'这是一段文字哈哈哈哈哈哈哈哈哈' }}
+        {{ stageItem.content }}
       </p>
       <div class="badge">
         <img

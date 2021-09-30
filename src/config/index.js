@@ -68,9 +68,17 @@ export default {
   /**
    * @description 不需要版权信息组件显示的页面
    */
-  noCopyRightComponentsRouterList: ['about', 'chat-patient', 'chat-doctor'],
+  noCopyRightComponentsRouterList: ['about', 'chat-patient', 'chat-doctor', 'list', 'content'],
   /**
    * @description 签约时间存活时间
    */
-  contractActiveTime: 60000
+  contractActiveTime: 60000,
+  /**
+   * 天行数据请求源
+   */
+  wxRequestUrl: 'http://api.tianapi.com',
+  /**
+   * 天行数据API KEY
+   */
+  wxApiKey: 'e4cd9e3ba3767d30eb0e2cf89bcad5d7'
 }

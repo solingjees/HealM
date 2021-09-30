@@ -13,6 +13,7 @@ import errorHandle from '_utils/errorHandle'
 import VueSocketIO from 'vue-socket.io'
 import Meta from 'vue-meta'
 import './index.less'
+import moment from 'moment'
 import '@/assets/icons/iconfont.css'
 import 'vue-material/dist/vue-material.min.css'
 import 'vue-material/dist/theme/default.css'
@@ -21,6 +22,7 @@ import { SwipeCell, Notify } from 'vant'
 
 // if (process.env.NODE_ENV !== 'production') require('@/mock')
 
+moment.locale('zh-cn')
 ViewUI.LoadingBar.config({
   color: '#54a5f3'
 })
