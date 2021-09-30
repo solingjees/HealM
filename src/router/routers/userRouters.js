@@ -140,7 +140,7 @@ export default [
     meta: {
       title: '文章推荐',
       icon: 'book.png',
-      identity: [0]
+      identity: [0, 1]
     },
     children: [
       {
@@ -153,7 +153,10 @@ export default [
       },
       {
         path: 'content',
-        name: 'content',
+        name: 'article-content',
+        props: route => ({
+          wxUrl: route.query.wxUrl
+        }),
         meta: {
           title: '文章详情'
         },
