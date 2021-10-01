@@ -1,3 +1,4 @@
+import moment from 'moment'
 class Storage {
   constructor (key) {
     this.key = key

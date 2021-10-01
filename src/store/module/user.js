@@ -128,10 +128,10 @@ export default {
         }
       })
     },
-    handleGetInfo ({ commit }) {
+    handleGetInfo ({ commit }, enforceGetFromServer = false) {
       return new Promise((resolve, reject) => {
         const store_userInfo = UserInfoStorage.getValue()
-        if (store_userInfo) {
+        if (!enforceGetFromServer && store_userInfo) {
           // 本地有数据，从本地获取，并存储到store
           commit('setUserInfo', store_userInfo)
           resolve({

@@ -5,6 +5,7 @@ import store from '@/store'
 import iView from 'view-design'
 import { setToken, getToken, canTurnTo, setTitle } from '@/libs/util'
 import config from '@/config'
+import { UserInfoStorage } from '@/libs/localStorage'
 // const { homeName } = config
 
 Vue.use(Router)
@@ -34,6 +35,7 @@ router.beforeEach((to, from, next) => {
   const token = getToken()
   if (!token || token === '') {
     // token不存在，让用户去登录
+    UserInfoStorage.clear()
     next({
       name: 'login'
     })

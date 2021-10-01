@@ -140,7 +140,7 @@ export default [
     meta: {
       title: '文章推荐',
       icon: 'book.png',
-      identity: [0, 1]
+      identity: [0]
     },
     children: [
       {

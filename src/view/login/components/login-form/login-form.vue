@@ -128,7 +128,7 @@ export default {
         if (res.status) {
           // 登录成功后，获取用户的信息
 
-          const res2 = await this.handleGetInfo()
+          const res2 = await this.handleGetInfo(true)
           if (res2.status) {
             if (this.identity === 0) {
               // common user
