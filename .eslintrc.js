@@ -20,6 +20,6 @@ module.exports = {
     "no-return-assign": 'error' 
   },
   parserOptions: {
-    parser: 'babel-eslint'
+    parser: "@babel/eslint-parser",
   }
 }
