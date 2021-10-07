@@ -111,7 +111,6 @@ export default {
           },
           scale: true,
           type: 'time',
-          boundaryGap: false,
           axisLine: { onZero: false },
           splitLine: { show: false },
           splitNumber: 1,

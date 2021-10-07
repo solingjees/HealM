@@ -1,5 +1,10 @@
 <template>
-  <component :is="iconType" :type="iconName" :color="iconColor" :size="iconSize"/>
+  <component
+    :is="iconType"
+    :type="iconName"
+    :color="iconColor"
+    :size="iconSize"
+  />
 </template>
 
 <script>

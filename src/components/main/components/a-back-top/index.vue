@@ -1,11 +1,15 @@
 <template>
-    <div :class="classes" :style="styles" @click="back">
-        <slot>
-            <div :class="innerClasses">
-                <i class="ivu-icon ivu-icon-ios-arrow-up"></i>
-            </div>
-        </slot>
-    </div>
+  <div
+    :class="classes"
+    :style="styles"
+    @click="back"
+  >
+    <slot>
+      <div :class="innerClasses">
+        <i class="ivu-icon ivu-icon-ios-arrow-up"></i>
+      </div>
+    </slot>
+  </div>
 </template>
 <script>
 import { scrollTop } from '@/libs/util'
@@ -41,18 +45,6 @@ export default {
       backTop: false
     }
   },
-  mounted () {
-    // window.addEventListener('scroll', this.handleScroll, false)
-    // window.addEventListener('resize', this.handleScroll, false)
-    on(this.containerEle, 'scroll', this.handleScroll)
-    on(this.containerEle, 'resize', this.handleScroll)
-  },
-  beforeDestroy () {
-    // window.removeEventListener('scroll', this.handleScroll, false)
-    // window.removeEventListener('resize', this.handleScroll, false)
-    off(this.containerEle, 'scroll', this.handleScroll)
-    off(this.containerEle, 'resize', this.handleScroll)
-  },
   computed: {
     classes () {
       return [
@@ -74,6 +66,18 @@ export default {
     containerEle () {
       return this.container === window ? window : document.querySelector(this.container)
     }
+  },
+  mounted () {
+    // window.addEventListener('scroll', this.handleScroll, false)
+    // window.addEventListener('resize', this.handleScroll, false)
+    on(this.containerEle, 'scroll', this.handleScroll)
+    on(this.containerEle, 'resize', this.handleScroll)
+  },
+  beforeDestroy () {
+    // window.removeEventListener('scroll', this.handleScroll, false)
+    // window.removeEventListener('resize', this.handleScroll, false)
+    off(this.containerEle, 'scroll', this.handleScroll)
+    off(this.containerEle, 'resize', this.handleScroll)
   },
   methods: {
     handleScroll () {

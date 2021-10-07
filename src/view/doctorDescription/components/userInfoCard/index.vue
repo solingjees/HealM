@@ -40,7 +40,7 @@ export default {
 }
 </script>
 
-<style lang="less"; scoped>
+<style lang="less" scoped>
 @import '~/src/index.less';
 .user-info-card-wrapper {
   width: 100%;

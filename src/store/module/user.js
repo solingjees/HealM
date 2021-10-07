@@ -2,7 +2,6 @@ import { getInfo, resetPassword, updateInfo } from '@/api/home'
 import { normalLogin, checkPhoneVerify } from '@/api/login'
 import { setToken, getToken } from '@/libs/util'
 import { UserInfoStorage } from '@/libs/localStorage'
-import store from '../index'
 
 export default {
   state: {
