@@ -128,7 +128,7 @@ export default {
         if (res.status) {
           // 登录成功后，获取用户的信息
 
-          const res2 = await this.handleGetInfo(true)
+          const res2 = await this.handleGetInfo()
           if (res2.status) {
             if (this.identity === 0) {
               // common user
@@ -147,7 +147,6 @@ export default {
             this.$Message.error('用户信息获取失败')
           }
         } else {
-          this.form.password = ''
           this.$Message.error(res.script)
         }
       }

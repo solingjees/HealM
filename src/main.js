@@ -18,7 +18,7 @@ import '@/assets/icons/iconfont.css'
 import 'vue-material/dist/vue-material.min.css'
 import 'vue-material/dist/theme/default.css'
 import '@vant/touch-emulator' // vant的桌面适配
-import { SwipeCell, Notify, Swipe, SwipeItem } from 'vant'
+import { SwipeCell, Notify } from 'vant'
 
 // if (process.env.NODE_ENV !== 'production') require('@/mock')
 
@@ -33,8 +33,6 @@ Vue.use(Vuelidate)
 Vue.use(SwipeCell)
 Vue.use(Notify)
 Vue.use(Meta)
-Vue.use(Swipe)
-Vue.use(SwipeItem)
 
 Vue.use(new VueSocketIO({
   debug: process.env.NODE_ENV !== 'production',

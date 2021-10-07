@@ -11,48 +11,46 @@
       width="auto"
       @on-select="handleSelect"
     >
-      <template v-if="hasGetInfo">
-        <template v-for="item in menuList">
-          <menu-item
-            :key="`menu-${item.name}`"
-            class="menu-item"
-            :name="item.name"
-            :to="{ name: item.name }"
-          >
-            <div
-              class="menu-item-wrapper"
-              @click="closeSider"
-            >
-              <img
-                class="menu-item-img"
-                :src="require('/src/assets/images/iconfont/' + item.meta.icon)"
-                :alt="item.meta.title"
-              >
-              <div class="menu-item-title">
-                {{ item.meta.title }}
-              </div>
-            </div>
-          </menu-item>
-        </template>
-        <div
-          v-if="hasGetInfo"
-          class="logout-container"
+      <template v-for="item in menuList">
+        <menu-item
+          :key="`menu-${item.name}`"
+          class="menu-item"
+          :name="item.name"
+          :to="{ name: item.name }"
         >
-          <div class="menu-item-wrapper">
+          <div
+            class="menu-item-wrapper"
+            @click="closeSider"
+          >
             <img
               class="menu-item-img"
-              :src="LogoutIcon"
-              :alt="'退出'"
+              :src="require('/src/assets/images/iconfont/' + item.meta.icon)"
+              :alt="item.meta.title"
             >
-            <div
-              class="menu-item-title"
-              @click="logout"
-            >
-              退出
+            <div class="menu-item-title">
+              {{ item.meta.title }}
             </div>
           </div>
-        </div>
+        </menu-item>
       </template>
+      <div
+        v-if="hasGetInfo"
+        class="logout-container"
+      >
+        <div class="menu-item-wrapper">
+          <img
+            class="menu-item-img"
+            :src="LogoutIcon"
+            :alt="'退出'"
+          >
+          <div
+            class="menu-item-title"
+            @click="logout"
+          >
+            退出
+          </div>
+        </div>
+      </div>
     </Menu>
   </div>
 </template>

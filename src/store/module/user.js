@@ -1,5 +1,5 @@
 import { getInfo, resetPassword, updateInfo } from '@/api/home'
-import { normalLogin, checkPhoneVerify } from '@/api/login'
+import { normalLogin } from '@/api/login'
 import { setToken, getToken } from '@/libs/util'
 import { UserInfoStorage } from '@/libs/localStorage'
 import store from '../index'
@@ -108,26 +108,6 @@ export default {
             // 登录成功
             const data = res.data
             commit('setToken', data.token)
-            UserInfoStorage.clear()
-            dispatch('handleGetInfo')
-          }
-          resolve(res)
-        }).catch(err => {
-          reject(err)
-        })
-      })
-    },
-    // 登录
-    handlePhoneLogin ({ commit, dispatch }, { phoneNumber, verifyCode }) {
-      return new Promise((resolve, reject) => {
-        checkPhoneVerify({
-          phoneNumber, verifyCode
-        }).then(res => {
-          if (res.status) {
-            // 验证成功
-            const data = res.data
-            commit('setToken', data.token)
-            UserInfoStorage.clear()
             dispatch('handleGetInfo')
           }
           resolve(res)
@@ -141,7 +121,6 @@ export default {
       return new Promise((resolve, reject) => {
         try {
           this.commit('setToken', '')
-          this.commit('setHasGetInfo', false)
           UserInfoStorage.clear()
           resolve(true)
         } catch {
@@ -149,10 +128,10 @@ export default {
         }
       })
     },
-    handleGetInfo ({ commit }, enforceGetFromServer = false) {
+    handleGetInfo ({ commit }) {
       return new Promise((resolve, reject) => {
         const store_userInfo = UserInfoStorage.getValue()
-        if (!enforceGetFromServer && store_userInfo) {
+        if (store_userInfo) {
           // 本地有数据，从本地获取，并存储到store
           commit('setUserInfo', store_userInfo)
           resolve({

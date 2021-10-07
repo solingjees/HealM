@@ -6,15 +6,12 @@
       <hr>
     </div>
     <div class="button-group">
-      <a
-        class="button"
-        :href="qqLoginUrl"
-      >
+      <div class="button">
         <img
           :src="qqIcon"
           alt="qq登录"
         >
-      </a>
+      </div>
     </div>
     <div
       class="line3"
@@ -30,8 +27,7 @@ import QQIcon from '_icon/qq-fill.png'
 export default {
   name: 'ThirdLogin',
   data: () => ({
-    qqIcon: QQIcon,
-    qqLoginUrl: 'https://graph.qq.com/oauth2.0/authorize?response_type=code&client_id=101957782&redirect_uri=http%3A%2F%2Fwww.vaccum.ltd%2FqqLogin&state=test&display=mobile'
+    qqIcon: QQIcon
   }),
   methods: {
     goToPhoneLogin () {
