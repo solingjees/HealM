@@ -64,7 +64,7 @@
       v-if="!collapsed"
       @click="clickMask"
     />
-    <Layout>
+    <Layout id="layout">
       <Header class="header-con">
         <header-bar
           :collapsed="collapsed"

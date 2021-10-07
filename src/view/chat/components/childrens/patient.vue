@@ -77,6 +77,9 @@ export default {
   },
   computed: {
     initialTimeDelayList () {
+      if (this.isAssigned) {
+        return [0, 0, 0]
+      }
       let initialContractDelayTime = 0
       const contractList = this.messageList.filter(messageItem => JSON.parse(messageItem.content).type === 'contract')
       if (contractList.length > 0) {

@@ -147,6 +147,7 @@ export default {
             this.$Message.error('用户信息获取失败')
           }
         } else {
+          this.form.password = ''
           this.$Message.error(res.script)
         }
       }
