@@ -63,7 +63,7 @@
             !$v.form.verifyCode.minLength || !$v.form.verifyCode.maxLength
           "
           class="md-error"
-        >验证码为四位</span>
+        >验证码为六位</span>
       </div>
       <md-button
         class="md-raised md-primary submit-button"
@@ -83,7 +83,7 @@ import {
   numeric
 } from 'vuelidate/lib/validators'
 import { mapActions } from 'vuex'
-import { sendPhoneVerify, checkPhoneVerify } from '_api/login'
+import { sendPhoneVerify } from '_api/login'
 import { setToken } from '_utils/util'
 export default {
   name: 'LoginForm',
@@ -112,8 +112,8 @@ export default {
       },
       verifyCode: {
         required,
-        minLength: minLength(4),
-        maxLength: maxLength(4)
+        minLength: minLength(6),
+        maxLength: maxLength(6)
       }
     }
   },
@@ -128,32 +128,27 @@ export default {
     }
   },
   methods: {
-    ...mapActions(['handleGetInfo']),
+    ...mapActions(['handleGetInfo', 'setToken', 'handlePhoneLogin']),
     /**
      * 手机号登录
      */
     async submit () {
       if (!this.$v.$invalid) {
         // pass the input valid check
-        const res = await checkPhoneVerify(this.form)
+        const res = await this.handlePhoneLogin(this.form)
         if (res.status) {
           // 登录成功后，获取用户的信息
-          setToken(res.data.token)
-          const res2 = await this.handleGetInfo()
-          if (res2.status) {
-            this.$Message.success('用户认证成功')
-
-            // route to the reset-password page
-            this.$router.replace({
-              name: 'resetPassword'
-            })
-          } else {
-            // 用户信息获取失败
-            this.$Message.error('用户信息获取失败')
-          }
+          this.$Message.success('用户认证成功')
+          // route to the reset-password page
+          this.$router.replace({
+            name: 'resetPassword'
+          })
         } else {
-          this.$Message.error(res.script)
+          // 用户信息获取失败
+          this.$Message.error('用户认证失败')
         }
+      } else {
+        this.$Message.error(res.script)
       }
     },
     /**
@@ -181,6 +176,7 @@ export default {
           phoneNumber: this.form.phoneNumber
         })
         if (res.status) {
+          this.$Message.success('短信发送成功')
         } else {
           errorHandler(res)
         }

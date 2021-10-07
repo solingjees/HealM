@@ -1,76 +1,77 @@
 <template>
   <div
+    id="body"
     class="article-list-container"
   >
-    <Scroll
-      :on-reach-bottom="handleReachBottom"
-      :height="height"
-      :loading-text="'正在加载...'"
-    >
-      <div class="slider">
-        <Carousel
-          v-model="sliderIndex"
-          loop
-          autoplay
-          :autoplay-speed="3000"
-        >
-          <CarouselItem
-            v-for="(item,index) in sliderList"
-            :key="'slider-list-'+index"
-          >
-            <div
-              class="slider-body"
-              @click="handleGoToArticleContent(item.url)"
-            >
-              <img
-                :src="item.picUrl"
-                :alt="item.title"
-              >
-              <div class="text">
-                <h2 class="title">
-                  {{ item.title }}
-                </h2>
-                <div class="info">
-                  <img
-                    :src="WeixinIcon"
-                    alt="微信图标"
-                  >
-                  <h3 class="desc">
-                    {{ item.userName }}
-                  </h3>
-                </div>
-              </div>
-            </div>
-          </carouselitem>
-        </carousel>
-      </div>
-
-      <Card
-        v-for="(item, index) in cardList"
-        :key="'article-list-'+index"
-        dis-hover
+    <div class="slider">
+      <van-swipe
+        :autoplay="3000"
+        indicator-color="white"
+        :initial-swipe="sliderIndex"
       >
-        <div
-          class="scroll-body"
-          @click="handleGoToArticleContent(item.url)"
+        <van-swipe-item
+          v-for="(item,index) in sliderList"
+          :key="'slider-list-'+index"
         >
-          <div class="left">
+          <div
+            class="slider-body"
+            @click="handleGoToArticleContent(item.url)"
+          >
             <img
               :src="item.picUrl"
               :alt="item.title"
             >
-          </div>
-          <div class="right">
-            <h3 class="title">
-              {{ item.title }}
-            </h3>
-            <div class="second">
-              {{ item.userName }}|   {{ require('moment')(item.ctime).fromNow() }}
+            <div class="text">
+              <h2 class="title">
+                {{ item.title }}
+              </h2>
+              <div class="info">
+                <img
+                  :src="WeixinIcon"
+                  alt="微信图标"
+                >
+                <h3 class="desc">
+                  {{ item.userName }}
+                </h3>
+              </div>
             </div>
           </div>
+        </van-swipe-item>>
+      </van-swipe>
+    </div>
+
+    <Card
+      v-for="(item, index) in cardList"
+      :key="'article-list-'+index"
+      dis-hover
+    >
+      <div
+        class="scroll-body"
+        @click="handleGoToArticleContent(item.url)"
+      >
+        <div class="left">
+          <img
+            :src="item.picUrl"
+            :alt="item.title"
+          >
         </div>
-      </card>
-    </Scroll>
+        <div class="right">
+          <h3 class="title">
+            {{ item.title }}
+          </h3>
+          <div class="second">
+            {{ item.userName }}|   {{ require('moment')(item.ctime).fromNow() }}
+          </div>
+        </div>
+      </div>
+    </card>
+    <div
+      id="loadMore"
+      class="loadMore"
+      @click="handleReachBottom"
+    >
+      {{ !lock? '加载中...' : '加载更多...' }}
+    </div>
   </div>
 </template>
 
@@ -86,7 +87,8 @@ export default {
     num: 10,
     typeid: 3,
     height: window.innerHeight - 50,
-    articleList: []
+    articleList: [],
+    lock: false
   }),
   computed: {
     sliderList () {
@@ -98,9 +100,20 @@ export default {
     }
   },
   mounted () {
+    const that = this
     window.addEventListener('resize', () => {
       this.height = window.innerHeight - 50
     })
+    window.addEventListener('scroll', function () {
+      const body = document.getElementById('layout')
+      const clientHeight = document.body.clientHeight
+      const scrollTop = body.scrollTop
+      const scrollHeight = body.scrollHeight
+      if (clientHeight + scrollTop + 300 >= scrollHeight && !that.lock) {
+        that.lock = true
+        that.handleReachBottom()
+      }
+    }, true)
     this._getWxNews()
   },
   methods: {
@@ -123,6 +136,8 @@ export default {
         }
       }).catch(() => {
         this.$Message.error('请求异常')
+      }).finally(() => {
+        this.lock = false
       })
     },
     handleReachBottom () {
@@ -144,12 +159,18 @@ export default {
 @import '~/src/index.less';
 .article-list-container{
   width: 100%;
-  .scroll{
-    height: 100%;
-  }
+  overflow: hidden;
   .slider{
     box-sizing: border-box;
     padding: .5rem;
+  }
+  .loadMore{
+    width: 100%;
+    box-sizing: border-box;
+    text-align: center;
+    color:@themeColor;
+    font-size: 1rem;
+    padding: .5rem .5rem 3rem;
   }
 }
 
@@ -165,7 +186,6 @@ export default {
   height: 170px;
   overflow: hidden;
   border-radius: .5rem;
-  overflow: hidden;
   position: relative;
   img{
     width: 100%;
@@ -212,7 +232,9 @@ export default {
     height: 100%;
     .flex(column,flex-start,flex-start);
     .title{
-      .textStyle()
+      .textStyle();
+      color: #666;
+      text-shadow: none !important;
     }
     .second{
       .textStyle();

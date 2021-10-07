@@ -26,14 +26,6 @@
         </DatePicker>
       </div>
     </div>
-    <!-- <div class="addBtn">
-      <Button
-        type="primary"
-        @click="add"
-      >
-        添加新体检
-      </Button>
-    </div> -->
   </div>
 </template>
 

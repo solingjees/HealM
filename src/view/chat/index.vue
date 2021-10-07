@@ -15,6 +15,7 @@
       @on-content-click="handleContentClick"
     ></Content>
     <Operate-area
+      :key="refreshKey"
       :reset="reset"
       :message-list="messages"
       :opponent-id="opponentId"
@@ -58,6 +59,7 @@ export default {
   data () {
     return {
       reset: 0,
+      refreshKey: 0,
       vh: window.innerHeight * 0.01,
       messages: []
     }
@@ -112,6 +114,7 @@ export default {
           if (messageItemContent.type === 'cancelContract') {
             _messages[getContractIndex(messageItemContent)].cancelled = true
           } else if (messageItemContent.type === 'receiveContract') {
+            this.key += 1
             _messages[getContractIndex(messageItemContent)].received = true
           } else if (messageItemContent.type === 'refuseContract') {
             _messages[getContractIndex(messageItemContent)].refused = true

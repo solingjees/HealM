@@ -64,8 +64,6 @@
 import { validationMixin } from 'vuelidate'
 import { required, minLength, alphaNum, sameAs } from 'vuelidate/lib/validators'
 import { mapActions } from 'vuex'
-import { sendPhoneVerify, checkPhoneVerify } from '_api/login'
-import { setToken } from '_utils/util'
 export default {
   name: 'LoginForm',
   mixins: [validationMixin],
@@ -89,7 +87,7 @@ export default {
     }
   },
   methods: {
-    ...mapActions(['handleGetInfo', 'handleResetPassword']),
+    ...mapActions(['handleGetInfo', 'handleResetPassword', 'handleLogout']),
     /**
      * 手机号登录
      */
@@ -101,8 +99,8 @@ export default {
         })
         if (res.status) {
           // reset password success! reset token, login again
-          setToken('')
-          this.$Message.success(res.script)
+          this.$Message.success('更新密码成功，请重新登陆')
+          this.handleLogout()
           this.$router.replace({ name: 'login' })
         } else {
           this.$Message.error(res.script)
