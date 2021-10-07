@@ -45,7 +45,6 @@
 import DownArrowIcon from '_icon/downArrow.png'
 import Advice from './components/advice'
 import InfoDisplayTemplates from './components/infoDisplayTemplates'
-import moment from 'moment'
 export default {
   name: 'InfoCard',
   components: {
