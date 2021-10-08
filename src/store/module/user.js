@@ -46,6 +46,7 @@ export default {
         // 普通用户
         state.birthday = userInfo.birthday
         state.age = userInfo.age
+        state.qqNumber = userInfo.qqNumber || ''
       }
       state.hasGetInfo = true
     },
@@ -200,6 +201,10 @@ export default {
               commit('setSkill', newUserInfo.skill)
               commit('setIntroduction', newUserInfo.introduction)
             }
+            UserInfoStorage.setValue({
+              ...state,
+              ...newUserInfo
+            })
           }
           resolve(res)
         } catch (err) {

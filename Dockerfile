@@ -6,7 +6,7 @@ WORKDIR /app
 
 COPY . .
 
-RUN npm install
+RUN npm install --registry=https://registry.npm.taobao.org
 RUN npm run build
 
 FROM nginx:stable-alpine as production-stage

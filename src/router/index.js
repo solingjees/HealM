@@ -32,14 +32,8 @@ router.beforeEach((to, from, next) => {
     next()
     return
   }
-  const token = getToken()
-  if (!token || token === '') {
-    // token不存在，让用户去登录
-    UserInfoStorage.clear()
-    next({
-      name: 'login'
-    })
-  } else {
+
+  const getUserInfo = () => {
     // 用户已经登录了
     if (store.state.user.hasGetInfo) {
       // 用户已经获取了自己的信息
@@ -56,6 +50,22 @@ router.beforeEach((to, from, next) => {
         })
       })
     }
+  }
+
+  const token = getToken()
+  if (!token || token === '') {
+    UserInfoStorage.clear()
+    // token不存在但是参数中有token，就登陆这个用户
+    if (to.query.token) {
+      setToken(to.query.token)
+      getUserInfo()
+    } else {
+      next({
+        name: 'login'
+      })
+    }
+  } else {
+    getUserInfo()
   }
 })
 

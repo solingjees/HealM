@@ -25,6 +25,12 @@ export default {
   data: () => ({
     LeftArrowIcon
   }),
+  mounted () {
+    // qq用户未绑定
+    if (this.$route.query.openId && this.$route.query.state == 'true') {
+      this.$Message.error('用户未绑定该QQ,请先注册')
+    }
+  },
   methods: {
     goBack () {
       this.$router.back()

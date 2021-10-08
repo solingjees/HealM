@@ -51,6 +51,13 @@ export default [
     meta: {
       title: '用户中心',
       hideInMenu: true
+    },
+    props: route => {
+      return {
+        token: route.query.token,
+        openId: route.query.openId,
+        state: route.query.state == 'true' || route.query.state == true
+      }
     }
   },
   {

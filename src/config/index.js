@@ -80,5 +80,9 @@ export default {
   /**
    * 天行数据API KEY
    */
-  wxApiKey: 'e4cd9e3ba3767d30eb0e2cf89bcad5d7'
+  wxApiKey: 'e4cd9e3ba3767d30eb0e2cf89bcad5d7',
+  /**
+   * 绑定qq时前往的页面
+   */
+  qqBindUrl: 'https://graph.qq.com/oauth2.0/authorize?response_type=code&client_id=101957782&redirect_uri=http%3A%2F%2Fwww.vaccum.ltd%2FqqLogin&state=test&display=mobile'
 }

@@ -19,12 +19,6 @@
       />
       <input-item
         v-if="identity === 0"
-        title="绑定QQ"
-        :value="newUserInfo.qqNumber"
-        @on-change-value="(value) => changeValue('qqNumber', value)"
-      />
-      <input-item
-        v-if="identity === 0"
         title="出生日期"
         type="date"
         :value="newUserInfo.birthday"
@@ -50,7 +44,7 @@
         v-if="identity === 0"
         title="头像"
         type="image"
-        :value="newUserInfo.avatar"
+        :value="newUserInfo.avatar === ''?[] : [newUserInfo.avatar]"
         @on-change-value="(value) => changeValue('avatar', value)"
       />
       <!-- doctor -->
@@ -76,7 +70,10 @@
 import UserInfoCard from './components/userInfoCard'
 import UserInfoItems from './components/userInfoItems'
 import InputItem from '@/components/inputItem'
-import { mapActions } from 'vuex'
+import { mapActions, mapMutations } from 'vuex'
+import { bindQQ } from '@/api/login'
+import { UserInfoStorage } from '@/libs/localStorage'
+import { getToken } from '@/libs/util'
 export default {
   name: 'UserCenter',
   components: {
@@ -84,12 +81,27 @@ export default {
     UserInfoItems,
     InputItem
   },
+  props: {
+    token: {
+      type: [String, undefined],
+      default: undefined
+    },
+    openId: {
+      type: [String, undefined],
+      default: undefined
+    },
+    state: {
+      type: [Boolean],
+      default: false
+    }
+  },
   data: () => ({
     showModal: false,
     newUserInfo: {}
   }),
   computed: {
     userInfo () {
+      // eslint-disable-next-line vue/no-side-effects-in-computed-properties
       this.newUserInfo = this.$store.state.user
       return this.$store.state.user
     },
@@ -98,7 +110,7 @@ export default {
     },
     ageList () {
       const _ageList = []
-      let age = 0
+      let age = 1
       while (age <= 120) {
         _ageList.push({
           value: age,
@@ -117,6 +129,9 @@ export default {
         {
           value: '1',
           label: '男'
+        }, {
+          value: '2',
+          label: '秘密'
         }
       ]
     }
@@ -128,8 +143,25 @@ export default {
       }
     }
   },
+  mounted () {
+    if (!this.token && !this.openId && !this.state) {
+      // 不需要进行处理，默认情况
+    } else if (!this.state && this.openId) {
+    //  来自于qq可以被绑定的：token：null/undefined，openId(我们要绑定的qq openId)，state=false（qq可以被绑定）（用户已经登录）
+      this.bindQQ()
+    } else if (this.state && this.token && this.openId && this.token === getToken()) {
+      // 用户qq登陆成功
+      this.$$Message.success('QQ登陆成功')
+    } else if (this.state && this.token && this.openId && this.token !== getToken()) {
+      // 已经被绑定了
+      this.$Message.error('QQ已经被其他用户绑定')
+    } else {
+      console.log('未处理的情况')
+    }
+  },
   methods: {
     ...mapActions(['handleModifyUserInfo']),
+    ...mapMutations(['setQQNumber']),
     copy (object) {
       return JSON.parse(JSON.stringify(object))
     },
@@ -137,6 +169,7 @@ export default {
       this.showModal = value
     },
     changeValue (key, value) {
+      console.log(key, value)
       const _newUserInfo = this.copy(this.newUserInfo)
       _newUserInfo[key] = value
       this.newUserInfo = _newUserInfo
@@ -149,10 +182,9 @@ export default {
       if (this.userInfo.identity === 0) {
         // common user
         postUserInfo.name = getAttribute('name')
-        postUserInfo.qqNumber = getAttribute('qqNumber')
         postUserInfo.birthday = getAttribute('birthday')
-        postUserInfo.age = getAttribute('age')
-        postUserInfo.gender = getAttribute('gender')
+        postUserInfo.age = parseInt(getAttribute('age'))
+        postUserInfo.gender = parseInt(getAttribute('gender'))
         postUserInfo.avatar = getAttribute('avatar')
       } else if (this.userInfo.identity === 1) {
         postUserInfo.skill = getAttribute('skill')
@@ -161,6 +193,23 @@ export default {
       const res = await this.handleModifyUserInfo(postUserInfo)
       if (res.status) {
         this.showModal = false
+      }
+    },
+    async bindQQ () {
+      const res = await bindQQ({
+        openId: this.openId,
+        isReplace: false
+      })
+      this.setQQNumber(this.openId)
+      const _user = JSON.parse(JSON.stringify(this.$$store.state.user))
+      delete _user.hasGetInfo
+      delete _user.token
+      UserInfoStorage.setValue(_user)
+      if (res.status) {
+        // 修改本地信息
+        this.$Message.success('绑定QQ成功')
+      } else {
+        this.$Message.error('绑定QQ失败,' + res.script)
       }
     }
   }

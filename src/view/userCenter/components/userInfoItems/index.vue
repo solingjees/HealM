@@ -9,17 +9,10 @@
     />
     <menu-item
       v-if="userInfo.identity === 0"
-      :icon="QQIcon"
-      title="QQ"
-      :separate-line="true"
-      :value="userInfo.qqNumber || '无'"
-    />
-    <menu-item
-      v-if="userInfo.identity === 0"
       :icon="CalendarIcon"
       title="出生日期"
       :separate-line="true"
-      :value="userInfo.birthday"
+      :value="typeof userInfo.birthday === 'number' ? require('moment')(userInfo.birthday).format('YYYY-MM-DD') : userInfo.birthday"
     />
     <menu-item
       v-if="userInfo.identity === 0"
@@ -63,6 +56,25 @@
           @click="editInfo"
         >
       </menu-item>
+      <menu-item
+        v-if="userInfo.identity === 0"
+        :icon="QQIcon"
+        title="绑定QQ"
+      >
+        <div
+          v-if="userInfo.qqNumber !== ''"
+          class="bound"
+        >
+          已绑定
+        </div>
+        <img
+          v-else
+          class="inset-img"
+          :src="RightArrowIcon"
+          alt="operation"
+          @click="goToBindQQ"
+        >
+      </menu-item>
     </div>
   </div>
 </template>
@@ -96,6 +108,11 @@ export default {
     KeyIcon,
     EditIcon
   }),
+  computed: {
+    qqBindUrl () {
+      return this.$config.qqBindUrl
+    }
+  },
   methods: {
     navigateToResetPassword () {
       this.$router.push({
@@ -104,12 +121,16 @@ export default {
     },
     editInfo () {
       this.$emit('on-show-modal')
+    },
+    goToBindQQ () {
+      window.open(this.qqBindUrl, '_self')
     }
   }
 }
 </script>
 
 <style lang="less">
+@import '~/src/index.less';
 .user-info-items-wrapper {
   width: 100%;
   margin-top: 20px;
@@ -122,5 +143,10 @@ export default {
     width: 30px;
     height: 30px;
   }
+}
+
+.bound{
+  color: @themeColor;
+  font-size: 1rem;
 }
 </style>

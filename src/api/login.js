@@ -16,3 +16,5 @@ export const sendPhoneVerify = (data) => {
 export const checkPhoneVerify = (data) => {
   return axios.post(HEADER + '/checkPhoneVerify', data)
 }
+
+export const bindQQ = (data) => axios.post(HEADER + '/bindQQ', data)

@@ -2,7 +2,7 @@
   <div class="third-login-wrapper">
     <div class="line">
       <hr>
-      第三方登录
+      合作账号登录
       <hr>
     </div>
     <div class="button-group">
@@ -26,13 +26,17 @@
 </template>
 
 <script>
-import QQIcon from '_icon/qq-fill.png'
+import QQIcon from '_icon/qq_logo.png'
 export default {
   name: 'ThirdLogin',
   data: () => ({
-    qqIcon: QQIcon,
-    qqLoginUrl: 'https://graph.qq.com/oauth2.0/authorize?response_type=code&client_id=101957782&redirect_uri=http%3A%2F%2Fwww.vaccum.ltd%2FqqLogin&state=test&display=mobile'
+    qqIcon: QQIcon
   }),
+  computed: {
+    qqLoginUrl () {
+      return this.$config.qqBindUrl
+    }
+  },
   methods: {
     goToPhoneLogin () {
       this.$router.push({
